@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LOTEX AI | Inteligencia Inmobiliaria a Medida</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts (Montserrat & Open Sans) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     
     <!-- FontAwesome -->
@@ -18,10 +18,12 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    // Paleta de Colores Eficaxx
                     colors: {
-                        eficaxxBlue: '#004f8f',
-                        eficaxxGreen: '#78ab00',
-                        eficaxxDark: '#003366',
+                        'brand-blue': '#004f8f',
+                        'brand-green': '#78ab00',
+                        'brand-dark': '#003366',
+                        'brand-neutral': '#f2f1f0',
                     },
                     fontFamily: {
                         sans: ['Open Sans', 'sans-serif'],
@@ -33,268 +35,465 @@
     </script>
 
     <style>
-        /* Estilos para ocultar la barra de scroll en el modal pero permitir scroll */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
+        /* Estilos para asegurar que el contenido de la Landing no se estire */
+        body {
+            background-color: #f0f2f5; /* Fondo general que se ve en el navegador */
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        /* El contenedor principal de la web fuerza el ancho móvil */
+        #landing-content {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
-        /* Animación suave para el modal */
-        #demoModal {
+        /* Estilos para el Modal de Chat (Asegura que el fondo del chat sea el correcto) */
+        #chat-modal-overlay {
             transition: opacity 0.3s ease-in-out;
         }
-        
-        /* Simulación de iPhone CSS Puro - SIN NOTCH */
-        .iphone-frame {
-            /* El borde grueso que simula el marco del teléfono */
-            box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #374151, 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border-radius: 40px; /* Bordes redondeados del teléfono */
-            overflow: hidden;
-            position: relative;
-            background: #000;
-        }
-        
-        /* HE ELIMINADO LA CLASE .notch DE AQUÍ */
     </style>
 </head>
-<body class="font-sans text-gray-800 antialiased overflow-x-hidden">
+<body class="font-sans text-gray-800 antialiased">
 
-    <!-- NAVBAR -->
-    <nav class="fixed w-full z-40 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-eficaxxGreen rounded-lg flex items-center justify-center text-white font-bold">L</div>
-                    <span class="font-heading font-bold text-2xl text-eficaxxBlue tracking-tight">LOTEX <span class="text-eficaxxGreen">AI</span></span>
-                </div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#problema" class="text-gray-600 hover:text-eficaxxBlue font-semibold transition">El Problema</a>
-                    <a href="#solucion" class="text-gray-600 hover:text-eficaxxBlue font-semibold transition">Nuestra Solución</a>
-                    <a href="#demo" class="text-gray-600 hover:text-eficaxxBlue font-semibold transition">Demo</a>
-                </div>
-                <button onclick="openModal()" class="bg-eficaxxBlue text-white px-6 py-2.5 rounded-full font-bold hover:bg-eficaxxDark transition shadow-lg transform hover:scale-105">
-                    Probar Demo
-                </button>
-            </div>
-        </div>
-    </nav>
+    <!-- CONTENEDOR PRINCIPAL CENTRADO (SOLUCIONA EL PROBLEMA DE ESTIRAMIENTO) -->
+    <div id="landing-content" class="max-w-[480px] mx-auto min-h-screen bg-white relative shadow-2xl">
 
-    <!-- HERO SECTION -->
-    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <!-- Fondo Abstracto -->
-        <div class="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-200 -z-10"></div>
-        <div class="absolute top-0 right-0 w-1/2 h-full bg-eficaxxBlue/5 skew-x-12 transform translate-x-20"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div class="text-center max-w-4xl mx-auto">
-                <div class="inline-block bg-eficaxxBlue/10 text-eficaxxBlue px-4 py-1 rounded-full text-sm font-bold mb-6 animate-pulse">
-                    🚀 Potenciado por Inteligencia Artificial Generativa
-                </div>
-                <h1 class="font-heading text-5xl md:text-6xl lg:text-7xl font-extrabold text-eficaxxBlue leading-tight mb-6">
-                    No te adaptes al software. <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-eficaxxGreen to-emerald-400">Que la IA se adapte a ti.</span>
-                </h1>
-                <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-                    LOTEX AI no es otro CRM o Chatbot genérico. Es un copiloto comercial entrenado específicamente con tu flujo, tus reglas y tu tono de voz. Conoce a <strong>Valeria</strong>.
-                </p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button onclick="openModal()" class="group bg-eficaxxGreen text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 flex items-center gap-3">
-                        <i class="fa-brands fa-whatsapp text-2xl"></i>
-                        Ver Live Demo
-                        <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
-                    </button>
-                    <a href="#solucion" class="text-eficaxxBlue font-semibold hover:underline decoration-eficaxxGreen underline-offset-4">
-                        Entender la tecnología &rarr;
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- EL PROBLEMA (VILLANO) VS HEROE -->
-    <section id="problema" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <!-- Columna Villano -->
-                <div class="bg-gray-50 p-10 rounded-3xl border border-gray-100">
-                    <h3 class="font-heading text-2xl font-bold text-gray-400 mb-6 flex items-center gap-3">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Software Genérico
-                    </h3>
-                    <ul class="space-y-6">
-                        <li class="flex gap-4 opacity-60">
-                            <i class="fa-solid fa-xmark text-red-400 mt-1"></i>
-                            <p><strong>Rígido:</strong> Te obligan a cambiar tus procesos para encajar en sus "cajas".</p>
-                        </li>
-                        <li class="flex gap-4 opacity-60">
-                            <i class="fa-solid fa-xmark text-red-400 mt-1"></i>
-                            <p><strong>Robótico:</strong> Chatbots con respuestas pregrabadas que el cliente detecta y odia.</p>
-                        </li>
-                        <li class="flex gap-4 opacity-60">
-                            <i class="fa-solid fa-xmark text-red-400 mt-1"></i>
-                            <p><strong>Desconectado:</strong> El marketing, la venta y el cierre viven en islas separadas.</p>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Columna Héroe (LOTEX) -->
-                <div class="bg-eficaxxBlue text-white p-10 rounded-3xl shadow-2xl relative overflow-hidden transform md:scale-105">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-eficaxxGreen rounded-full blur-3xl opacity-30 -mr-10 -mt-10"></div>
-                    
-                    <h3 class="font-heading text-3xl font-bold mb-6 flex items-center gap-3 text-white">
-                        <i class="fa-solid fa-check-circle text-eficaxxGreen"></i> La Propuesta LOTEX
-                    </h3>
-                    <ul class="space-y-6 relative z-10">
-                        <li class="flex gap-4 items-start">
-                            <div class="mt-1 bg-eficaxxGreen rounded-full p-1 w-6 h-6 flex items-center justify-center text-xs">
-                                <i class="fa-solid fa-check"></i>
-                            </div>
-                            <div>
-                                <strong class="text-lg">Adaptabilidad Total</strong>
-                                <p class="text-blue-100 text-sm mt-1">Entrenamos a la IA con TUS planos, TU financiamiento y TU speech.</p>
-                            </div>
-                        </li>
-                        <li class="flex gap-4 items-start">
-                            <div class="mt-1 bg-eficaxxGreen rounded-full p-1 w-6 h-6 flex items-center justify-center text-xs">
-                                <i class="fa-solid fa-check"></i>
-                            </div>
-                            <div>
-                                <strong class="text-lg">Gestión Intuitiva</strong>
-                                <p class="text-blue-100 text-sm mt-1">Desde el "Info" en Instagram hasta la cita en el lote. Un solo flujo continuo.</p>
-                            </div>
-                        </li>
-                        <li class="flex gap-4 items-start">
-                            <div class="mt-1 bg-eficaxxGreen rounded-full p-1 w-6 h-6 flex items-center justify-center text-xs">
-                                <i class="fa-solid fa-check"></i>
-                            </div>
-                            <div>
-                                <strong class="text-lg">Humanización Digital</strong>
-                                <p class="text-blue-100 text-sm mt-1">Valeria duda, usa emojis y valida emociones. Conversión real.</p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CARACTERÍSTICAS -->
-    <section id="solucion" class="py-20 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="font-heading text-4xl font-bold text-eficaxxBlue mb-4">El Cerebro detrás de la Venta</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Más que un bot, una suite de herramientas diseñada para cerrar lotes.</p>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition border-t-4 border-eficaxxGreen">
-                    <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center text-eficaxxGreen text-2xl mb-6">
-                        <i class="fa-solid fa-brain"></i>
+        <!-- NAVBAR -->
+        <nav class="fixed w-[480px] max-w-[480px] z-40 bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100 top-0">
+            <div class="px-4">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-brand-green rounded-lg flex items-center justify-center text-white font-bold">L</div>
+                        <span class="font-heading font-bold text-2xl text-brand-blue tracking-tight">LOTEX <span class="text-brand-green">AI</span></span>
                     </div>
-                    <h3 class="font-heading text-xl font-bold text-gray-800 mb-3">IA Contextual</h3>
-                    <p class="text-gray-600 text-sm">Entiende si el cliente quiere invertir o vivir, y adapta sus argumentos (Plusvalía vs. Familia).</p>
+                    <div class="hidden md:flex space-x-8">
+                        <!-- En HTML estático, mejor usar IDs para anclas -->
+                        <a href="#problema" class="text-gray-600 hover:text-brand-blue font-semibold transition">El Problema</a>
+                        <a href="#solucion" class="text-gray-600 hover:text-brand-blue font-semibold transition">Nuestra Solución</a>
+                        <a href="#demo" class="text-gray-600 hover:text-brand-blue font-semibold transition">Demo</a>
+                    </div>
+                    <button onclick="openModal()" class="bg-brand-blue text-white px-4 py-2 rounded-full font-bold hover:bg-brand-dark transition shadow-lg transform hover:scale-105 text-sm">
+                        Probar Demo
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- HERO SECTION (Contenido adaptado al tamaño de 480px) -->
+        <header class="relative pt-24 pb-10 md:pt-32 overflow-hidden">
+            <!-- Imagen de Fondo -->
+            <div class="absolute inset-0 z-0">
+                <img 
+                    src="https://e.nexoinmobiliario.pe/customers/eficaxx-grupo-inmobiliario/4027-villa-querencia/lotes-huaral-690e1e30305dd_b.jpg" 
+                    alt="Familia feliz en el campo" 
+                    class="w-full h-full object-cover object-center" 
+                />
+                <!-- Overlay Oscuro -->
+                <div class="absolute inset-0 bg-black/40"></div>
+            </div>
+
+            <!-- Contenido -->
+            <div class="relative z-10 container mx-auto px-4 text-center">
+                
+                <div class="mt-8">
+                    <div class="inline-block bg-brand-green/20 text-brand-green px-3 py-1 rounded-full text-xs font-bold mb-4">
+                        🚀 IA que Vende, No que Pregunta
+                    </div>
+                    <h1 class="font-heading text-4xl font-extrabold text-white leading-tight mb-4 drop-shadow-lg">
+                        No te adaptes al software. <span class="text-brand-green block">Que la IA se adapte a ti.</span>
+                    </h1>
+                    <p class="text-md text-gray-200 mb-8 max-w-xs mx-auto">
+                        LOTEX AI: El copiloto comercial entrenado con el flujo de **Valeria** y la visión de **Villa Querencia**.
+                    </p>
+                    
+                    <!-- CTA Principal -->
+                    <button onclick="openModal('general')" class="group bg-brand-green text-white px-8 py-3 rounded-full font-bold shadow-xl hover:shadow-2xl transition-all transform hover:scale-[1.02] flex items-center gap-3 justify-center mx-auto">
+                        <i class="fa-brands fa-whatsapp text-xl"></i>
+                        Ver Demo en Vivo
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- EL PROBLEMA (VILLANO) VS HEROE -->
+        <section id="problema" class="py-12 px-4 bg-white">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-bold text-brand-blue mb-2 font-heading">El Villano: Software Rígido</h2>
+                <p class="text-gray-500 text-sm">Te adaptas a ellos. Nosotros nos adaptamos a tu venta.</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Villano -->
+                <div class="bg-gray-100 p-5 rounded-lg border-l-4 border-gray-400">
+                    <p class="font-bold text-gray-700 flex items-center gap-2"><i class="fa-solid fa-xmark text-red-400"></i> Software Genérico</p>
+                    <p class="text-xs text-gray-500 mt-1">Te obliga a cambiar tus flujos comerciales y de cierre.</p>
+                </div>
+                <!-- Héroe -->
+                <div className="bg-gradient-to-r from-brand-blue/10 to-white p-5 rounded-lg border-l-4 border-brand-green shadow-md">
+                    <p class="font-bold text-brand-blue flex items-center gap-2"><i class="fa-solid fa-check text-brand-green"></i> LOTEX AI</p>
+                    <p class="text-xs text-gray-600 mt-1">Entendemos tu proceso y el de Valeria, adaptando la IA a tu forma de vender.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARACTERÍSTICAS -->
+        <section id="solucion" class="py-12 px-4 bg-brand-neutral">
+            <div class="text-center mb-10">
+                <h2 class="text-2xl font-bold text-brand-blue mb-2 font-heading">Inteligencia que Cierra</h2>
+                <p class="text-gray-600 text-sm">Más allá de la información, impulsamos la **Trazabilidad y el Cierre**.</p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-5 rounded-xl shadow-sm flex gap-4 items-start border-b-2 border-brand-green/50">
+                    <div class="w-10 h-10 bg-brand-green/10 rounded-lg flex items-center justify-center text-brand-green mt-1">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-brand-blue">Fase de Embudo Clara</h3>
+                        <p class="text-gray-600 text-xs">Sabemos si el lead está en TOFU (info rápida) o BOFU (agenda visita).</p>
+                    </div>
                 </div>
                 <!-- Card 2 -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition border-t-4 border-eficaxxBlue">
-                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center text-eficaxxBlue text-2xl mb-6">
-                        <i class="fa-brands fa-whatsapp"></i>
+                <div class="bg-white p-5 rounded-xl shadow-sm flex gap-4 items-start border-b-2 border-brand-blue/50">
+                    <div class="w-10 h-10 bg-brand-blue/10 rounded-lg flex items-center justify-center text-brand-blue mt-1">
+                        <i class="fa-solid fa-database"></i>
                     </div>
-                    <h3 class="font-heading text-xl font-bold text-gray-800 mb-3">Cierre en WhatsApp</h3>
-                    <p class="text-gray-600 text-sm">No te deja en "visto". Busca activamente la cita, la llamada o la visita al proyecto.</p>
-                </div>
-                <!-- Card 3 -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition border-t-4 border-gray-800">
-                    <div class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center text-gray-800 text-2xl mb-6">
-                        <i class="fa-solid fa-chart-pie"></i>
+                    <div>
+                        <h3 class="font-bold text-brand-blue">Memoria Centralizada (Firebase)</h3>
+                        <p class="text-gray-600 text-xs">Todo el chat de Instagram y WhatsApp se guarda en tu CRM para el asesor.</p>
                     </div>
-                    <h3 class="font-heading text-xl font-bold text-gray-800 mb-3">Embudo Integral</h3>
-                    <p class="text-gray-600 text-sm">Desde el anuncio en Meta hasta el CRM. Trazabilidad completa del lead.</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- FOOTER -->
-    <footer class="bg-eficaxxBlue text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="font-heading text-2xl font-bold mb-6">¿Listo para evolucionar tu fuerza de ventas?</h2>
-            <button onclick="openModal()" class="bg-eficaxxGreen text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-white hover:text-eficaxxGreen transition">
-                Probar Demo Interactiva
+        <!-- BLOQUE DE CIERRE: EL BUS -->
+        <section class="py-12 px-4 bg-white pb-32">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-brand-blue mb-2 font-heading">
+                    El Poder del Cierre: Cita Presencial
+                </h2>
+                <p class="text-lg text-gray-700 mb-6">
+                    El **CTA más fuerte** para un lote es el terreno mismo.
+                </p>
+            </div>
+
+            <!-- CTA del Bus -->
+            <div 
+                onclick="openModal('tour')"
+                class="rounded-2xl p-6 text-white shadow-xl mb-6 cursor-pointer transform transition active:scale-[0.98] overflow-hidden"
+                style="background-color: #004f8f;"
+            >
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <Bus className="text-[#78aa00]" />
+                            <span class="font-bold uppercase text-xs" style="color: #78aa00;">Cierre BOFU: Visita Guiada</span>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-1">Bus de Visita</h3>
+                        <p class="text-blue-200 text-sm mb-3">Te llevamos a Huaral este domingo. Reserva tu cupo con Valeria.</p>
+                        <span class="inline-block bg-white/20 px-3 py-1 rounded text-xs font-semibold">
+                            Agendar Viaje &rarr;
+                        </span>
+                    </div>
+                    <div class="text-5xl opacity-50">
+                        <MapPin />
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-center text-xs text-gray-500 mt-6">
+                La trazabilidad garantiza que el asesor asignado vea todo el historial antes de contactarte.
+            </p>
+        </section>
+
+        <!-- ==========================================
+            STICKY BAR (MÓVIL)
+        =========================================== -->
+        <div class="fixed bottom-0 left-0 w-[480px] max-w-[480px] bg-white border-t border-gray-100 p-4 flex items-center justify-between z-40 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
+            <div>
+                <p class="text-[10px] text-gray-500 font-bold uppercase">Precio Preventa</p>
+                <p class="text-2xl font-extrabold text-brand-blue">S/ 41,050</p>
+            </div>
+            <button 
+                onclick="openModal('cotizar_sticky')"
+                class="bg-brand-green hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition active:scale-95"
+            >
+                <i className="fa-brands fa-whatsapp text-xl"></i>
+                <span className="text-sm">Cotizar Ahora</span>
             </button>
-            <p class="mt-8 text-blue-200 text-sm">© 2024 LOTEX AI. Desarrollado para Eficaxx Grupo Inmobiliario.</p>
         </div>
-    </footer>
+    </div> <!-- FIN CONTENEDOR PRINCIPAL -->
 
-    <!-- MODAL DE DEMO (IPHONE STYLE) -->
-    <div id="demoModal" class="fixed inset-0 z-50 hidden">
-        <!-- Overlay oscuro -->
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+
+    <!-- MODAL DE CHAT FLOTANTE (LO ÚNICO QUE QUEDA DEL REACT) -->
+    <div id="chat-modal-overlay" class="fixed inset-0 z-50 hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
         
-        <!-- Contenedor Centrado -->
-        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
-            <!-- Frame del Teléfono (Pointer events auto para interactuar) -->
-            <div class="pointer-events-auto relative w-full max-w-[360px] h-[750px] max-h-[90vh] iphone-frame bg-white transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-                
-                <!-- HE ELIMINADO EL DIV NOTCH QUE ESTABA AQUI -->
-
-                <!-- Botón de Cerrar (Fuera del iframe pero visible) -->
-                <button onclick="closeModal()" class="absolute -top-12 right-0 md:-right-12 text-white hover:text-eficaxxGreen transition z-50">
-                    <i class="fa-solid fa-xmark text-4xl"></i>
-                    <span class="text-xs block text-center mt-1">Cerrar</span>
-                </button>
-
-                <!-- El IFRAME con la demo -->
-                <iframe 
-                    src="https://lotex-ai-real-estate-crm-37933698510.us-west1.run.app/" 
-                    class="w-full h-full border-0 bg-white"
-                    title="Demo Chatbot Valeria"
-                    allow="microphone; camera; geolocation">
-                </iframe>
-                
-                <!-- Indicador de Home (Barra inferior iOS) -->
-                <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-black rounded-full z-20 opacity-20"></div>
+        <!-- Contenedor del Chat -->
+        <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[480px] h-[90vh] bg-[#efeae2] rounded-t-[2rem] shadow-2xl flex flex-col relative overflow-hidden animate-in slide-in-from-bottom duration-300">
+            
+            <!-- Header WhatsApp Style (Color #008069) -->
+            <div class="bg-[#008069] px-4 py-4 flex items-center justify-between shadow-md">
+                <div class="flex items-center gap-3 text-white">
+                    <div class="relative">
+                        <img 
+                            src="https://e.nexoinmobiliario.pe/customers/eficaxx-grupo-inmobiliario/logo-336-20250912121834.jpg" 
+                            alt="Eficaxx" 
+                            class="w-10 h-10 rounded-full object-cover border-2 border-white/20"
+                        />
+                        <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 rounded-full border border-[#008069]"></div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-base leading-tight">Valeria | Villa Querencia</span>
+                        <span class="text-xs text-green-100 opacity-90">En línea ahora</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 text-white">
+                    <i class="fa-solid fa-phone w-5 h-5 opacity-80 cursor-not-allowed"></i>
+                    <i class="fa-solid fa-xmark w-6 h-6 cursor-pointer opacity-80 hover:opacity-100 rounded-full p-0.5 transition" onclick="closeModal()"></i>
+                </div>
             </div>
+
+            <!-- Messages Area (¡Aquí va la magia del chat!) -->
+            <div 
+                id="chat-window"
+                class="flex-1 overflow-y-auto p-4 space-y-3 relative"
+                style="background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: 400px; background-blend-mode: soft-light;"
+            >
+                <!-- Mensaje Inicial Contextual Automático -->
+                <div id="initial-bot-message" class="flex justify-start animate-in fade-in slide-in-from-left-2 duration-300">
+                    <div class="bg-white p-3 rounded-tr-lg rounded-br-lg rounded-bl-lg rounded-tl-none shadow-sm text-sm text-[#111b21] max-w-[85%]">
+                        <span class="font-bold text-[#008069] block mb-1 text-xs">Valeria</span>
+                        Cargando contexto...
+                        <span class="block text-[10px] text-gray-400 text-right mt-1">...</span>
+                    </div>
+                </div>
+
+                <!-- Aquí se inyectarán dinámicamente los mensajes (Inicialmente vacío) -->
+                <div id="messages-container"></div>
+
+                <div id="typing-indicator" class="flex justify-start hidden">
+                    <div class="bg-white rounded-lg px-4 py-2 shadow-sm">
+                        <div class="flex gap-1">
+                            <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 75ms;"></div>
+                            <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 150ms;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="messages-end-ref" />
+            </div>
+
+            <!-- Input Area -->
+            <div class="bg-[#f0f2f5] p-2 flex items-center gap-2 pb-6 sm:pb-2">
+                <div class="bg-white flex-1 rounded-full flex items-center px-4 py-2 shadow-sm border border-gray-200">
+                    <input
+                        type="text"
+                        id="chat-input"
+                        placeholder="Escribe un mensaje..."
+                        class="w-full bg-transparent border-none focus:outline-none text-gray-700 text-sm"
+                    />
+                </div>
+                <button 
+                    id="send-button"
+                    class="p-3 rounded-full flex items-center justify-center transition bg-[#008069] text-white hover:scale-105 shadow-md"
+                >
+                    <i class="fa-solid fa-paper-plane ml-0.5"></i>
+                </button>
+            </div>
+
         </div>
     </div>
 
-    <!-- SCRIPTS -->
+    <!-- SCRIPTS JAVASCRIPT (Toda la lógica que antes estaba en React) -->
     <script>
-        const modal = document.getElementById('demoModal');
-        const modalContent = document.getElementById('modalContent');
-        const body = document.body;
+        // VARIABLES GLOBALES (Simulando el State de React)
+        let isChatOpen = false;
+        let messages = [];
+        let chatContext = '';
+        let isTyping = false;
+        const MAX_WIDTH = 480; // Ancho fijo para la landing
 
-        function openModal() {
-            modal.classList.remove('hidden');
-            body.classList.add('overflow-hidden'); // Evitar scroll en el fondo
+        // Elementos del DOM
+        const modalOverlay = document.getElementById('chat-modal-overlay');
+        const landingContent = document.getElementById('landing-content');
+        const chatWindow = document.getElementById('chat-window');
+        const messagesContainer = document.getElementById('messages-container');
+        const chatInput = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const initialBotMessage = document.getElementById('initial-bot-message');
+
+        // --- Funciones de UI/UX ---
+        function openModal(context = 'general') {
+            chatContext = context;
+            isChatOpen = true;
+            modalOverlay.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden'); // Evitar scroll en el fondo
             
-            // Pequeño delay para la animación de entrada
+            // Simular mensaje inicial contextual
+            simulateInitialBotMessage(context);
+            
+            // Animación de entrada
             setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('scale-100', 'opacity-100');
+                modalOverlay.style.opacity = 1;
             }, 10);
         }
 
         function closeModal() {
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
+            isChatOpen = false;
+            modalOverlay.style.opacity = 0;
+            document.body.classList.remove('overflow-hidden');
             
-            // Esperar a que termine la animación para ocultar
+            // Esperar animación
             setTimeout(() => {
-                modal.classList.add('hidden');
-                body.classList.remove('overflow-hidden');
+                modalOverlay.classList.add('hidden');
+                messages = []; // Limpiar mensajes al cerrar
+                chatContext = '';
+                renderChat();
             }, 300);
         }
 
-        // Cerrar con tecla ESC
+        function simulateInitialBotMessage(context) {
+            // Usamos un timeout corto para simular que el sistema está "preparando" la respuesta
+            setTimeout(() => {
+                let initialText = "¡Hola! 👋 Bienvenido a Villa Querencia. Soy Valeria. ¿Te gustaría recibir el plano actualizado y precios?";
+                
+                if (context === 'tour') {
+                    initialText = "¡Hola! 👋 Veo que te interesa la Visita Guiada en Bus. Salimos todos los domingos. ¿Para cuántas personas te gustaría reservar?";
+                } else if (context === 'inversion') {
+                    initialText = "¡Hola! 👋 Excelente decisión pensar en inversión. Huaral tiene la plusvalía más alta por el Puerto. ¿Buscas comprar al contado o financiado?";
+                } else if (context === 'cotizar_sticky') {
+                    initialText = "¡Hola! 👋 Te envío la información de precios al instante. ¿Buscas lote para vivir o para inversión?";
+                }
+                
+                const botMsg = {
+                    id: Date.now().toString(),
+                    text: initialText,
+                    isUser: false,
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                };
+                messages.push(botMsg);
+                renderChat();
+            }, 500); 
+        }
+
+        // --- Lógica de Renderizado ---
+        function renderChat() {
+            messagesContainer.innerHTML = '';
+            
+            messages.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `flex w-full ${msg.isUser ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200`;
+                
+                const bubble = document.createElement('div');
+                bubble.className = `relative max-w-[85%] px-3 py-2 rounded-lg text-sm shadow-sm ${
+                    msg.isUser 
+                    ? 'bg-[#d9fdd3] text-[#111b21] rounded-tr-none' 
+                    : 'bg-white text-[#111b21] rounded-tl-none'
+                }`;
+
+                const textContent = document.createElement('div');
+                textContent.className = 'break-words pb-1';
+                textContent.innerText = msg.text;
+
+                const timeStamp = document.createElement('span');
+                timeStamp.className = `block text-[10px] text-right mt-1 ${msg.isUser ? 'text-green-800/60' : 'text-gray-400'}`;
+                timeStamp.innerText = msg.timestamp;
+                if (msg.isUser) {
+                    timeStamp.innerHTML += `<i class="fa-solid fa-check-double text-blue-500 ml-1"></i>`;
+                }
+
+                bubble.appendChild(textContent);
+                bubble.appendChild(timeStamp);
+                msgDiv.appendChild(bubble);
+                messagesContainer.appendChild(msgDiv);
+            });
+
+            // Typing Indicator
+            typingIndicator.classList.toggle('hidden', !isTyping);
+            
+            // Scroll al final
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        // --- Lógica de Envío (Simula la llamada a Gemini) ---
+        function handleSend() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const userMsg = {
+                id: Date.now().toString(),
+                text: text,
+                isUser: true,
+                timestamp: timeString,
+            };
+
+            messages.push(userMsg);
+            chatInput.value = '';
+            renderChat();
+            
+            // 1. Simular que Valeria está pensando
+            isTyping = true;
+            renderChat();
+
+            // 2. Simular llamada a Gemini (Aquí iría tu 'sendMessageToGemini(text, 'whatsapp')')
+            setTimeout(() => {
+                isTyping = false;
+                
+                // SIMULACIÓN DE RESPUESTA DE VALERIA (Alineada a la lógica entrenada)
+                let simulatedResponse = "Entendido. Gracias por el contexto. Para poder avanzar mejor, ¿te gustaría que te agende una llamada de 5 minutos o prefieres una videollamada para mostrarte el plan maestro?";
+
+                if (text.toLowerCase().includes("precio") || text.toLowerCase().includes("41000")) {
+                    simulatedResponse = "¡Claro! El precio base es S/ 41,050. Para separar, solo se necesita un monto mínimo. ¿Tienes liquidez para la cuota inicial (20%) o necesitas crédito directo?";
+                } else if (text.toLowerCase().includes("visita") || text.toLowerCase().includes("bus")) {
+                    simulatedResponse = "¡Perfecto! Para asegurar tu cupo en el bus de este domingo, necesito confirmar tu nombre completo y teléfono. ¿Te parece si te llamamos en 5 minutos para coordinar la recogida?";
+                }
+
+                const botMsg = {
+                    id: (Date.now() + 1).toString(),
+                    text: simulatedResponse,
+                    isUser: false,
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                };
+
+                messages.push(botMsg);
+                renderChat();
+            }, 2500); // Tiempo simulado de respuesta
+        }
+
+        // --- Event Listeners ---
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") {
                 closeModal();
             }
         });
+
+        sendButton.addEventListener('click', handleSend);
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+
+        // Eventos de los CTA de la Landing (¡La clave!)
+        document.querySelectorAll('[data-cta]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const context = button.getAttribute('data-cta');
+                openModal(context);
+            });
+        });
+
+        // Inicializar la vista (debe ser al final)
+        window.onload = () => {
+            // Asegurar que la vista principal esté centrada
+            landingContent.style.maxWidth = `${MAX_WIDTH}px`;
+            landingContent.style.margin = '0 auto';
+        }
     </script>
 </body>
 </html>
