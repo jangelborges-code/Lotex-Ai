@@ -1,226 +1,132 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOTEX AI | Inteligencia Inmobiliaria a Medida</title>
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, get, onValue, off, update, remove } from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDeAi2zWvn1EmMs2oU-7pCGFltJp_79QWY",
+  authDomain: "villaquerencia-79bd9.firebaseapp.com",
+  databaseURL: "https://lotex-ai-real-estate-crm-37933698510.us-west1.run.app",
+  projectId: "villaquerencia-79bd9",
+  storageBucket: "villaquerencia-79bd9.firebasestorage.app",
+  messagingSenderId: "529349394900",
+  appId: "1:529349394900:web:4dcbf97ac6e69909331641",
+  measurementId: "G-4N9F9LQTF6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+export interface Lead {
+  id: string; // phone number used as ID
+  name: string;
+  phone: string;
+  source: 'Instagram' | 'Landing' | 'WhatsApp';
+  stage: 'New' | 'Conversation' | 'Meeting_Booked';
+  history: string[]; // Log of messages or summary
+  timestamp: number;
+  tasks?: string[]; // Array of assigned tasks
+}
+
+/**
+ * Saves or updates a lead in the database under 'leads/{phoneNumber}'
+ * Uses 'update' to prevent overwriting existing fields like 'tasks'
+ */
+export const saveLead = async (lead: Lead): Promise<void> => {
+  const leadId = lead.phone; 
+  const leadRef = ref(db, `leads/${leadId}`);
+  
+  // Use update to merge with existing data
+  await update(leadRef, { ...lead, id: leadId });
+  
+  // Fallback: Save to localStorage for resilience
+  localStorage.setItem(`lead_${leadId}`, JSON.stringify(lead));
+};
+
+/**
+ * Updates only the name of an existing lead
+ */
+export const updateLeadName = async (phoneNumber: string, name: string): Promise<void> => {
+  const leadRef = ref(db, `leads/${phoneNumber}`);
+  await update(leadRef, { name });
+  
+  // Update local storage fallback as well
+  const localData = localStorage.getItem(`lead_${phoneNumber}`);
+  if (localData) {
+      const parsed = JSON.parse(localData);
+      parsed.name = name;
+      localStorage.setItem(`lead_${phoneNumber}`, JSON.stringify(parsed));
+  }
+};
+
+/**
+ * Retrieves a specific lead by phone number
+ */
+export const getLead = async (phoneNumber: string): Promise<Lead | null> => {
+  try {
+    const leadRef = ref(db, `leads/${phoneNumber}`);
+    const snapshot = await get(leadRef);
+    if (snapshot.exists()) {
+      return snapshot.val() as Lead;
+    }
+  } catch (e) {
+    console.warn("Firebase fetch failed, trying localStorage", e);
+  }
+  
+  // Fallback to localStorage
+  const localData = localStorage.getItem(`lead_${phoneNumber}`);
+  if (localData) return JSON.parse(localData) as Lead;
+
+  return null;
+};
+
+/**
+ * Adds a task string to a specific lead
+ */
+export const addTaskToLead = async (phoneNumber: string, task: string): Promise<void> => {
+  const leadRef = ref(db, `leads/${phoneNumber}`);
+  const snapshot = await get(leadRef);
+  
+  if (snapshot.exists()) {
+    const lead = snapshot.val() as Lead;
+    const currentTasks = lead.tasks || [];
+    const updatedTasks = [...currentTasks, task];
     
-    <!-- Tailwind CSS (CDN) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    await update(leadRef, { 
+      tasks: updatedTasks,
+      stage: 'Meeting_Booked' // Auto update stage if task is added
+    });
+  }
+};
 
-    <script>
-        // Configuración de Colores de Marca
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        eficaxxBlue: '#004f8f',
-                        eficaxxGreen: '#78aa00',
-                        eficaxxDark: '#003366',
-                    },
-                    fontFamily: {
-                        sans: ['Open Sans', 'sans-serif'],
-                        heading: ['Montserrat', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+/**
+ * Deletes a specific lead by phone number
+ */
+export const deleteLead = async (phoneNumber: string): Promise<void> => {
+  const leadRef = ref(db, `leads/${phoneNumber}`);
+  await remove(leadRef);
+};
 
-    <style>
-        /* Estilos para centrar el contenido como un móvil, resolviendo el estiramiento */
-        .mobile-container {
-            background-color: #f0f2f5; /* Fondo claro fuera del teléfono */
-        }
-        
-        /* Simulación de iPhone CSS Puro */
-        .iphone-frame {
-            /* Marco gris oscuro/negro con bordes redondeados */
-            box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #374151, 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border-radius: 40px; 
-            overflow: hidden;
-            position: relative;
-            background: #000;
-        }
-    </style>
-</head>
-<body class="font-sans text-gray-800 antialiased overflow-x-hidden mobile-container">
+/**
+ * Subscribes to changes in the 'leads' node. 
+ * Returns an unsubscribe function.
+ */
+export const subscribeToLeads = (callback: (leads: Lead[]) => void) => {
+  const leadsRef = ref(db, 'leads');
+  
+  const handleValueChange = (snapshot: any) => {
+    const data = snapshot.val();
+    if (data) {
+      // Convert Firebase object (keyed by ID) to an Array
+      const leadList = Object.values(data) as Lead[];
+      // Sort by newest first
+      leadList.sort((a, b) => b.timestamp - a.timestamp);
+      callback(leadList);
+    } else {
+      callback([]);
+    }
+  };
 
-    <!-- MODAL DE DEMO (IPHONE STYLE) - Se mueve arriba para tener el control principal -->
-    <div id="demoModal" class="fixed inset-0 z-50 hidden transition-opacity duration-300">
-        <!-- Overlay oscuro -->
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
-        
-        <!-- Contenedor Centrado -->
-        <div class="absolute inset-0 flex items-center justify-center p-4">
-            <!-- Frame del Teléfono -->
-            <div class="pointer-events-auto relative w-full max-w-[360px] h-[95vh] max-h-[800px] iphone-frame bg-white transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
-                
-                <!-- Botón de Cerrar -->
-                <button onclick="closeModal()" class="absolute -top-12 right-0 md:-right-12 text-white hover:text-red-400 transition z-50">
-                    <i class="fa-solid fa-xmark text-4xl"></i>
-                    <span class="text-xs block text-center mt-1">Cerrar Demo</span>
-                </button>
+  const unsubscribe = onValue(leadsRef, handleValueChange);
 
-                <!-- El IFRAME con tu Chatbot ya entrenado (URL de tu demo) -->
-                <iframe 
-                    src="https://eficaxx-chatbot-842323622032.us-west1.run.app/" 
-                    class="w-full h-full border-0 bg-white"
-                    title="Demo Chatbot Valeria"
-                    allow="microphone; camera; geolocation">
-                </iframe>
-                
-                <!-- Barra inferior de iOS simulada -->
-                <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-black rounded-full z-20 opacity-20"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- CONTENIDO DE LA LANDING PAGE (Centrado y Responsivo a Móvil) -->
-    <div class="w-full max-w-[480px] bg-white shadow-xl">
-        
-        <!-- NAVBAR -->
-        <nav class="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
-            <div class="px-4">
-                <div class="flex justify-between items-center h-16">
-                    <div class="flex items-center gap-2">
-                        <!-- Logo: Usando la imagen que proporcionaste -->
-                        <img src="https://e.nexoinmobiliario.pe/customers/eficaxx-grupo-inmobiliario/logo-336-20250912121834.jpg" 
-                             alt="Logo Eficaxx" 
-                             class="h-8 w-auto" />
-                        <span class="font-heading font-bold text-xl text-eficaxxBlue tracking-tight">LOTEX <span class="text-eficaxxGreen">AI</span></span>
-                    </div>
-                    <button onclick="openModal()" class="bg-eficaxxBlue text-white px-4 py-2 rounded-full font-bold hover:bg-eficaxxDark transition shadow-md text-sm">
-                        Ver Demo
-                    </button>
-                </div>
-            </div>
-        </nav>
-
-        <!-- HERO SECTION (STORYTELLING 2028) -->
-        <header class="relative h-[450px] flex items-center justify-center overflow-hidden">
-            <!-- Imagen -->
-            <div class="absolute inset-0">
-                <img 
-                    src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?q=80&w=1000&auto=format&fit=crop" 
-                    alt="Parcelas en Huaral" 
-                    class="w-full h-full object-cover"
-                />
-                <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/90"></div>
-            </div>
-
-            <!-- Contenido Hero -->
-            <div class="relative z-10 px-6 text-white text-center">
-                <div className={`inline-block bg-[${colorGreen}] text-white text-xs font-bold px-2 py-1 rounded mb-3 uppercase tracking-wider`}>
-                    Preventa Exclusiva
-                </div>
-                <h1 class="text-3xl font-heading font-extrabold leading-snug mb-3">
-                    No te adaptes al software. <br/>
-                    <span class="text-white/90">Que la IA se adapte a ti.</span>
-                </h1>
-                <p class="text-base text-gray-200 mb-6 font-light">
-                    LOTEX AI es el copiloto que entiende tu flujo. <br/> Conoce a **Valeria**.
-                </p>
-                
-                <button onclick="openModal()" class={`bg-[${colorGreen}] hover:bg-opacity-90 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-[1.02] flex items-center justify-center gap-2 mx-auto`}>
-                    <i class="fa-brands fa-whatsapp text-xl"></i>
-                    Ver Demo del Chatbot
-                </button>
-            </div>
-        </header>
-
-        <!-- BLOQUE 2: STORYTELLING / VALOR DE INVERSIÓN -->
-        <section className="py-10 px-6 bg-white">
-            <h2 class={`text-[${colorBlue}] font-bold text-2xl mb-6 font-heading text-center`}>
-                El Legado de la Familia Martínez (Nuestra Visión)
-            </h2>
-            
-            <div className="space-y-6 text-sm text-gray-600">
-                <div className="flex gap-4 items-start">
-                    <i className="fa-solid fa-clock text-xl text-gray-400 mt-1 flex-shrink-0"></i>
-                    <div>
-                        <strong className="font-bold text-gray-800 block">El Contexto (2028):</strong>
-                        El Megapuerto de Chancay es la realidad. Los precios se dispararon.
-                    </div>
-                </div>
-
-                <div className="flex gap-4 items-start">
-                    <i className="fa-solid fa-house-chimney-window text-xl text-gray-400 mt-1 flex-shrink-0"></i>
-                    <div>
-                        <strong className="font-bold text-gray-800 block">El Refugio (Huaral):</strong>
-                        A 20 min del caos, tu familia disfruta del campo. Tienes paz y plusvalía.
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- BLOQUE 3: GANCHOS DE CIERRE (VISITA / BUS) -->
-        <section className="py-12 px-6 bg-[#f2f1f0]">
-            <div className="text-center mb-8">
-                <h2 className={`text-[${colorBlue}] font-bold text-2xl mb-2 font-heading`}>
-                    No te quedes pensando, vívelo.
-                </h2>
-                <p className="text-gray-500 text-sm">Nuestros CTAs están diseñados para llevarte directo a la conversión.</p>
-            </div>
-
-            {/* Card Visita Guiada - CTA PRINCIPAL */}
-            <div 
-                onClick={openDemoModal}
-                className={`relative bg-gradient-to-r from-[${colorBlue}] to-[#003366] rounded-xl p-5 text-white shadow-lg mb-4 cursor-pointer transform transition active:scale-[0.98] group overflow-hidden border-b-4 border-[#78aa00]/80`}
-            >
-                <div className="relative z-10 flex justify-between items-center">
-                    <div>
-                        <div className="flex items-center gap-2 mb-1">
-                            <Bus className="text-[#78aa00]" />
-                            <span className={`font-bold text-[#78aa00] uppercase text-xs`}>Cierre BOFU</span>
-                        </div>
-                        <h3 className="text-lg font-bold mb-1">Agendar Reunión o Visita</h3>
-                        <p className="text-blue-100 text-xs mb-2">Lleva al cliente al asesor correcto, en el momento correcto.</p>
-                        <span className="inline-block bg-white/20 px-3 py-1 rounded text-xs font-semibold">
-                            Iniciar Conversación &rarr;
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- FOOTER DE CONFIANZA -->
-        <footer className={`bg-white border-t border-gray-100 pt-6 pb-10 text-center text-xs text-gray-500`}>
-             <p>Desarrollado con la **Tecnología LOTEX AI**.</p>
-             <p>Valeria está lista para recibirte en el simulador.</p>
-        </footer>
-    </div>
-
-    <!-- SCRIPTS -->
-    <script>
-        const modal = document.getElementById('demoModal');
-        const modalContent = document.getElementById('modalContent');
-        
-        function openModal() {
-            modal.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden'); 
-            
-            setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeModal() {
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
-            
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.body.classList.remove('overflow-hidden');
-            }, 300);
-        }
-    </script>
-</body>
-</html>
+  // Return function to stop listening
+  return () => off(leadsRef, 'value', handleValueChange);
+};
