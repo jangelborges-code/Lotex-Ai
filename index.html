@@ -46,8 +46,6 @@
         #demoModal {
             transition: opacity 0.3s ease-in-out;
         }
-        
-        /* He eliminado las clases y estilos relacionados con .iphone-frame */
     </style>
 </head>
 <body class="font-sans text-gray-800 antialiased overflow-x-hidden">
@@ -219,15 +217,15 @@
         </div>
     </footer>
 
-    <!-- MODAL DE DEMO (SIN FRAME DE IPHONE) -->
+    <!-- MODAL DE DEMO (AJUSTADO PARA MEJOR VISIBILIDAD) -->
     <div id="demoModal" class="fixed inset-0 z-50 hidden">
         <!-- Overlay oscuro -->
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
         
         <!-- Contenedor Centrado -->
         <div class="absolute inset-0 flex items-center justify-center p-4">
-            <!-- Contenido del Modal (Ahora es solo el iframe en un contenedor simple) -->
-            <div class="relative w-full max-w-md md:max-w-lg lg:max-w-xl bg-white rounded-xl shadow-2xl transform transition-all duration-300 opacity-0" id="modalContent">
+            <!-- Contenido del Modal: Más ancho en pantallas grandes (lg:max-w-3xl) y mantiene buena altura -->
+            <div class="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-3xl bg-white rounded-xl shadow-2xl transform transition-all duration-300 opacity-0" id="modalContent">
                 
                 <!-- Botón de Cerrar -->
                 <button onclick="closeModal()" class="absolute -top-12 right-0 text-white hover:text-eficaxxGreen transition z-50">
@@ -239,7 +237,7 @@
                 <iframe 
                     src="https://lotex-ai-real-estate-crm-37933698510.us-west1.run.app/" 
                     class="w-full border-0 bg-white rounded-xl"
-                    style="height: 600px;"
+                    style="height: 80vh; min-height: 450px;" /* Uso de vh para mejor adaptación de alto */
                     title="Demo Chatbot Valeria"
                     allow="microphone; camera; geolocation">
                 </iframe>
@@ -248,7 +246,7 @@
         </div>
     </div>
 
-    <!-- SCRIPTS -->
+    <!-- SCRIPTS (Sin cambios en la lógica JS) -->
     <script>
         const modal = document.getElementById('demoModal');
         const modalContent = document.getElementById('modalContent');
@@ -256,9 +254,8 @@
 
         function openModal() {
             modal.classList.remove('hidden');
-            body.classList.add('overflow-hidden'); // Evitar scroll en el fondo
+            body.classList.add('overflow-hidden'); 
             
-            // Pequeño delay para la animación de entrada
             setTimeout(() => {
                 modalContent.classList.remove('opacity-0');
                 modalContent.classList.add('opacity-100');
@@ -269,14 +266,12 @@
             modalContent.classList.remove('opacity-100');
             modalContent.classList.add('opacity-0');
             
-            // Esperar a que termine la animación para ocultar
             setTimeout(() => {
                 modal.classList.add('hidden');
                 body.classList.remove('overflow-hidden');
             }, 300);
         }
 
-        // Cerrar con tecla ESC
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") {
                 closeModal();
