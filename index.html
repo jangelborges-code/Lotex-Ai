@@ -48,6 +48,12 @@
         #chat-modal-overlay {
             transition: opacity 0.3s ease-in-out;
         }
+        /* Fondo de chat genérico para simular WhatsApp */
+        .whatsapp-bg {
+            background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+            background-size: 400px;
+            background-blend-mode: soft-light;
+        }
     </style>
 </head>
 <body class="font-sans text-gray-800 antialiased">
@@ -55,7 +61,7 @@
     <!-- CONTENEDOR PRINCIPAL CENTRADO (SOLUCIONA EL PROBLEMA DE ESTIRAMIENTO) -->
     <div id="landing-content" class="max-w-[480px] mx-auto min-h-screen bg-white relative shadow-2xl">
 
-        <!-- NAVBAR -->
+        <!-- NAVBAR (Fija y Ancha solo 480px) -->
         <nav class="fixed w-[480px] max-w-[480px] z-40 bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100 top-0">
             <div class="px-4">
                 <div class="flex justify-between items-center h-20">
@@ -64,12 +70,11 @@
                         <span class="font-heading font-bold text-2xl text-brand-blue tracking-tight">LOTEX <span class="text-brand-green">AI</span></span>
                     </div>
                     <div class="hidden md:flex space-x-8">
-                        <!-- En HTML estático, mejor usar IDs para anclas -->
                         <a href="#problema" class="text-gray-600 hover:text-brand-blue font-semibold transition">El Problema</a>
                         <a href="#solucion" class="text-gray-600 hover:text-brand-blue font-semibold transition">Nuestra Solución</a>
                         <a href="#demo" class="text-gray-600 hover:text-brand-blue font-semibold transition">Demo</a>
                     </div>
-                    <button onclick="openModal()" class="bg-brand-blue text-white px-4 py-2 rounded-full font-bold hover:bg-brand-dark transition shadow-lg transform hover:scale-105 text-sm">
+                    <button onclick="openModal('general')" class="bg-brand-blue text-white px-4 py-2 rounded-full font-bold hover:bg-brand-dark transition shadow-lg transform hover:scale-105 text-sm">
                         Probar Demo
                     </button>
                 </div>
@@ -77,7 +82,7 @@
         </nav>
 
         <!-- HERO SECTION (Contenido adaptado al tamaño de 480px) -->
-        <header class="relative pt-24 pb-10 md:pt-32 overflow-hidden">
+        <header class="relative pt-24 pb-10 md:pt-32 overflow-hidden" style="padding-top: 100px;"> <!-- Ajuste de padding para navbar fija -->
             <!-- Imagen de Fondo -->
             <div class="absolute inset-0 z-0">
                 <img 
@@ -112,83 +117,87 @@
             </div>
         </header>
 
-        <!-- EL PROBLEMA (VILLANO) VS HEROE -->
-        <section id="problema" class="py-12 px-4 bg-white">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-bold text-brand-blue mb-2 font-heading">El Villano: Software Rígido</h2>
-                <p class="text-gray-500 text-sm">Te adaptas a ellos. Nosotros nos adaptamos a tu venta.</p>
-            </div>
-
+        <!-- BLOQUE 2: DATOS DUROS (EFECTO CHANCAY) -->
+        <section id="problema" class="py-10 px-4 bg-white">
+            <h2 class="text-brand-blue font-bold text-2xl mb-6 font-heading text-center">
+                El Poder de la Anticipación
+            </h2>
+            
             <div class="space-y-6">
-                <!-- Villano -->
-                <div class="bg-gray-100 p-5 rounded-lg border-l-4 border-gray-400">
-                    <p class="font-bold text-gray-700 flex items-center gap-2"><i class="fa-solid fa-xmark text-red-400"></i> Software Genérico</p>
-                    <p class="text-xs text-gray-500 mt-1">Te obliga a cambiar tus flujos comerciales y de cierre.</p>
+                <!-- Dato 1 -->
+                <div class="flex gap-4 items-start">
+                    <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0 text-brand-blue">
+                        <i class="fa-solid fa-ship text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">Efecto Chancay</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            La cercanía al Megapuerto garantiza la **plusvalía** de tu lote para el 2028.
+                        </p>
+                    </div>
                 </div>
-                <!-- Héroe -->
-                <div className="bg-gradient-to-r from-brand-blue/10 to-white p-5 rounded-lg border-l-4 border-brand-green shadow-md">
-                    <p class="font-bold text-brand-blue flex items-center gap-2"><i class="fa-solid fa-check text-brand-green"></i> LOTEX AI</p>
-                    <p class="text-xs text-gray-600 mt-1">Entendemos tu proceso y el de Valeria, adaptando la IA a tu forma de vender.</p>
+
+                <!-- Dato 2 -->
+                <div class="flex gap-4 items-start">
+                    <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center flex-shrink-0 text-brand-green">
+                        <i class="fa-solid fa-map-location-dot text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg">La Regla de los 20 Min</h3>
+                        <p class="text-gray-600 text-sm leading-relaxed">
+                            Cerca del trabajo, lejos del caos. La zona residencial estratégica.
+                        </p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- CARACTERÍSTICAS -->
+        <!-- BLOQUE 3: EL VILLANO (LIMA GRIS) vs HÉROE (HUARAL) -->
         <section id="solucion" class="py-12 px-4 bg-brand-neutral">
-            <div class="text-center mb-10">
-                <h2 class="text-2xl font-bold text-brand-blue mb-2 font-heading">Inteligencia que Cierra</h2>
-                <p class="text-gray-600 text-sm">Más allá de la información, impulsamos la **Trazabilidad y el Cierre**.</p>
-            </div>
-
-            <div class="space-y-6">
-                <!-- Card 1 -->
-                <div class="bg-white p-5 rounded-xl shadow-sm flex gap-4 items-start border-b-2 border-brand-green/50">
-                    <div class="w-10 h-10 bg-brand-green/10 rounded-lg flex items-center justify-center text-brand-green mt-1">
-                        <i class="fa-solid fa-chart-line"></i>
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center">
+                <h3 class="text-gray-500 text-sm uppercase tracking-widest font-bold mb-4">Estilo de Vida</h3>
+                <h2 class="text-3xl font-heading font-bold text-brand-blue mb-4">
+                    Adiós Cielo Gris, Hola Domingo Eterno
+                </h2>
+                <p class="text-gray-600 mb-6 text-sm">
+                    Aire puro, sol todo el año y seguridad 24/7 para tu familia.
+                </p>
+                <div class="grid grid-cols-3 gap-2 text-center text-xs text-gray-500 font-semibold">
+                    <div class="bg-gray-50 p-2 rounded">
+                        <i class="fa-solid fa-sun text-2xl text-brand-blue mb-1 block"></i>
+                        Clima
                     </div>
-                    <div>
-                        <h3 class="font-bold text-brand-blue">Fase de Embudo Clara</h3>
-                        <p class="text-gray-600 text-xs">Sabemos si el lead está en TOFU (info rápida) o BOFU (agenda visita).</p>
+                    <div class="bg-gray-50 p-2 rounded">
+                        <i class="fa-solid fa-people-roof text-2xl text-brand-green mb-1 block"></i>
+                        Parqueo
                     </div>
-                </div>
-                <!-- Card 2 -->
-                <div class="bg-white p-5 rounded-xl shadow-sm flex gap-4 items-start border-b-2 border-brand-blue/50">
-                    <div class="w-10 h-10 bg-brand-blue/10 rounded-lg flex items-center justify-center text-brand-blue mt-1">
-                        <i class="fa-solid fa-database"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-brand-blue">Memoria Centralizada (Firebase)</h3>
-                        <p class="text-gray-600 text-xs">Todo el chat de Instagram y WhatsApp se guarda en tu CRM para el asesor.</p>
+                    <div class="bg-gray-50 p-2 rounded">
+                        <i class="fa-solid fa-shield-alt text-2xl text-gray-700 mb-1 block"></i>
+                        Seguridad
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- BLOQUE DE CIERRE: EL BUS -->
+        <!-- BLOQUE 4: GANCHOS DE CIERRE (EL BUS Y ASESOR) -->
         <section class="py-12 px-4 bg-white pb-32">
             <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-brand-blue mb-2 font-heading">
-                    El Poder del Cierre: Cita Presencial
+                <h2 class="text-brand-blue font-bold text-2xl mb-2 font-heading">
+                    El Cierre está en la Experiencia
                 </h2>
-                <p class="text-lg text-gray-700 mb-6">
-                    El **CTA más fuerte** para un lote es el terreno mismo.
-                </p>
+                <p class="text-gray-500 text-sm">Trazabilidad total: Del clic al asesor autorizado.</p>
             </div>
 
-            <!-- CTA del Bus -->
-            <div 
-                onclick="openModal('tour')"
-                class="rounded-2xl p-6 text-white shadow-xl mb-6 cursor-pointer transform transition active:scale-[0.98] overflow-hidden"
-                style="background-color: #004f8f;"
-            >
+            <!-- CTA del Bus (Simula wa.link con data-cta) -->
+            <div id="demo-bus" data-cta="tour" class="rounded-2xl p-6 text-white shadow-xl mb-6 cursor-pointer transform transition active:scale-[0.97] overflow-hidden" style="background-color: #004f8f;">
                 <div class="flex justify-between items-center">
                     <div>
                         <div class="flex items-center gap-2 mb-2">
                             <Bus className="text-[#78aa00]" />
                             <span class="font-bold uppercase text-xs" style="color: #78aa00;">Cierre BOFU: Visita Guiada</span>
                         </div>
-                        <h3 class="text-2xl font-bold mb-1">Bus de Visita</h3>
-                        <p class="text-blue-200 text-sm mb-3">Te llevamos a Huaral este domingo. Reserva tu cupo con Valeria.</p>
+                        <h3 class="text-xl font-bold mb-1">Bus de Visita Gratuito</h3>
+                        <p class="text-blue-200 text-xs mb-3">Te llevamos a Huaral este domingo. Reserva tu cupo.</p>
                         <span class="inline-block bg-white/20 px-3 py-1 rounded text-xs font-semibold">
                             Agendar Viaje &rarr;
                         </span>
@@ -199,15 +208,24 @@
                 </div>
             </div>
 
-            <p class="text-center text-xs text-gray-500 mt-6">
-                La trazabilidad garantiza que el asesor asignado vea todo el historial antes de contactarte.
-            </p>
+            <!-- CTA Reunión Asesor -->
+            <div id="asesor-link" data-cta="asesoria" class="border-2 border-gray-200 rounded-2xl p-5 flex items-center gap-4 hover:border-brand-green transition cursor-pointer active:scale-[0.98] bg-white">
+                <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200" alt="Asesor" class="w-full h-full object-cover" />
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-800 text-sm">Dudas de Financiamiento (Crédito Directo)</h3>
+                    <p class="text-gray-500 text-xs">Agenda 15 min con Valeria para tu estudio de caso.</p>
+                </div>
+                <div class="ml-auto text-brand-green">
+                    <CalendarCheck className="w-6 h-6" />
+                </div>
+            </div>
+
         </section>
 
-        <!-- ==========================================
-            STICKY BAR (MÓVIL)
-        =========================================== -->
-        <div class="fixed bottom-0 left-0 w-[480px] max-w-[480px] bg-white border-t border-gray-100 p-4 flex items-center justify-between z-40 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
+        <!-- STICKY BAR (MÓVIL) -->
+        <div class="fixed bottom-0 left-0 right-0 mx-auto w-[480px] bg-white border-t border-gray-100 p-4 flex items-center justify-between z-40 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
             <div>
                 <p class="text-[10px] text-gray-500 font-bold uppercase">Precio Preventa</p>
                 <p class="text-2xl font-extrabold text-brand-blue">S/ 41,050</p>
@@ -216,22 +234,22 @@
                 onclick="openModal('cotizar_sticky')"
                 class="bg-brand-green hover:bg-opacity-90 text-white font-bold py-3 px-6 rounded-full shadow-lg flex items-center gap-2 transition active:scale-95"
             >
-                <i className="fa-brands fa-whatsapp text-xl"></i>
-                <span className="text-sm">Cotizar Ahora</span>
+                <i class="fa-brands fa-whatsapp text-xl"></i>
+                <span class="text-sm">Cotizar Ahora</span>
             </button>
         </div>
     </div> <!-- FIN CONTENEDOR PRINCIPAL -->
 
 
-    <!-- MODAL DE CHAT FLOTANTE (LO ÚNICO QUE QUEDA DEL REACT) -->
-    <div id="chat-modal-overlay" class="fixed inset-0 z-50 hidden">
+    <!-- MODAL DE CHAT FLOTANTE (WhatsApp Simulation) -->
+    <div id="chat-modal-overlay" class="fixed inset-0 z-50 hidden opacity-0">
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
         
-        <!-- Contenedor del Chat -->
-        <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[480px] h-[90vh] bg-[#efeae2] rounded-t-[2rem] shadow-2xl flex flex-col relative overflow-hidden animate-in slide-in-from-bottom duration-300">
+        <!-- Contenedor del Chat (Estilo App Móvil) -->
+        <div class="absolute bottom-0 left-0 right-0 mx-auto w-full max-w-[480px] h-[90vh] bg-[#efeae2] rounded-t-[2rem] shadow-2xl flex flex-col relative overflow-hidden">
             
-            <!-- Header WhatsApp Style (Color #008069) -->
+            <!-- Header WhatsApp Style -->
             <div class="bg-[#008069] px-4 py-4 flex items-center justify-between shadow-md">
                 <div class="flex items-center gap-3 text-white">
                     <div class="relative">
@@ -253,22 +271,20 @@
                 </div>
             </div>
 
-            <!-- Messages Area (¡Aquí va la magia del chat!) -->
+            <!-- Messages Area -->
             <div 
                 id="chat-window"
-                class="flex-1 overflow-y-auto p-4 space-y-3 relative"
-                style="background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: 400px; background-blend-mode: soft-light;"
+                class="flex-1 overflow-y-auto p-4 space-y-3 relative whatsapp-bg"
             >
-                <!-- Mensaje Inicial Contextual Automático -->
-                <div id="initial-bot-message" class="flex justify-start animate-in fade-in slide-in-from-left-2 duration-300">
-                    <div class="bg-white p-3 rounded-tr-lg rounded-br-lg rounded-bl-lg rounded-tl-none shadow-sm text-sm text-[#111b21] max-w-[85%]">
-                        <span class="font-bold text-[#008069] block mb-1 text-xs">Valeria</span>
-                        Cargando contexto...
-                        <span class="block text-[10px] text-gray-400 text-right mt-1">...</span>
+                <!-- Mensaje Inicial Contextual (Se reemplaza por el JS) -->
+                <div id="initial-bot-message" class="flex justify-center mb-4">
+                    <div class="bg-[#f0f2f5] px-3 py-1 rounded-lg shadow-sm border border-gray-200">
+                        <p class="text-[10px] text-gray-500 text-center flex items-center gap-1">
+                            <i class="fa-solid fa-lock text-[8px]"></i> Mensajes cifrados de extremo a extremo.
+                        </p>
                     </div>
                 </div>
 
-                <!-- Aquí se inyectarán dinámicamente los mensajes (Inicialmente vacío) -->
                 <div id="messages-container"></div>
 
                 <div id="typing-indicator" class="flex justify-start hidden">
@@ -304,16 +320,15 @@
         </div>
     </div>
 
-    <!-- SCRIPTS JAVASCRIPT (Toda la lógica que antes estaba en React) -->
+    <!-- SCRIPTS JAVASCRIPT PURO -->
     <script>
-        // VARIABLES GLOBALES (Simulando el State de React)
+        // --- VARIABLES GLOBALES (Simulando el State de React) ---
         let isChatOpen = false;
         let messages = [];
         let chatContext = '';
         let isTyping = false;
-        const MAX_WIDTH = 480; // Ancho fijo para la landing
 
-        // Elementos del DOM
+        // --- Elementos del DOM ---
         const modalOverlay = document.getElementById('chat-modal-overlay');
         const landingContent = document.getElementById('landing-content');
         const chatWindow = document.getElementById('chat-window');
@@ -328,15 +343,15 @@
             chatContext = context;
             isChatOpen = true;
             modalOverlay.classList.remove('hidden');
-            document.body.classList.add('overflow-hidden'); // Evitar scroll en el fondo
-            
-            // Simular mensaje inicial contextual
-            simulateInitialBotMessage(context);
+            document.body.classList.add('overflow-hidden');
             
             // Animación de entrada
             setTimeout(() => {
                 modalOverlay.style.opacity = 1;
             }, 10);
+            
+            // Simular mensaje inicial contextual
+            simulateInitialBotMessage(context);
         }
 
         function closeModal() {
@@ -344,17 +359,21 @@
             modalOverlay.style.opacity = 0;
             document.body.classList.remove('overflow-hidden');
             
-            // Esperar animación
+            // Esperar animación y limpiar
             setTimeout(() => {
                 modalOverlay.classList.add('hidden');
-                messages = []; // Limpiar mensajes al cerrar
+                messages = [];
                 chatContext = '';
                 renderChat();
             }, 300);
         }
 
         function simulateInitialBotMessage(context) {
-            // Usamos un timeout corto para simular que el sistema está "preparando" la respuesta
+            // Limpia cualquier mensaje previo del simulador
+            messages = []; 
+            renderChat(); // Renderiza vacío primero
+
+            // Simula un pequeño delay para que el usuario vea que se está cargando
             setTimeout(() => {
                 let initialText = "¡Hola! 👋 Bienvenido a Villa Querencia. Soy Valeria. ¿Te gustaría recibir el plano actualizado y precios?";
                 
@@ -362,7 +381,7 @@
                     initialText = "¡Hola! 👋 Veo que te interesa la Visita Guiada en Bus. Salimos todos los domingos. ¿Para cuántas personas te gustaría reservar?";
                 } else if (context === 'inversion') {
                     initialText = "¡Hola! 👋 Excelente decisión pensar en inversión. Huaral tiene la plusvalía más alta por el Puerto. ¿Buscas comprar al contado o financiado?";
-                } else if (context === 'cotizar_sticky') {
+                } else if (context === 'cotizar_sticky' || context === 'general') {
                     initialText = "¡Hola! 👋 Te envío la información de precios al instante. ¿Buscas lote para vivir o para inversión?";
                 }
                 
@@ -374,7 +393,7 @@
                 };
                 messages.push(botMsg);
                 renderChat();
-            }, 500); 
+            }, 1000); 
         }
 
         // --- Lógica de Renderizado ---
@@ -398,10 +417,7 @@
 
                 const timeStamp = document.createElement('span');
                 timeStamp.className = `block text-[10px] text-right mt-1 ${msg.isUser ? 'text-green-800/60' : 'text-gray-400'}`;
-                timeStamp.innerText = msg.timestamp;
-                if (msg.isUser) {
-                    timeStamp.innerHTML += `<i class="fa-solid fa-check-double text-blue-500 ml-1"></i>`;
-                }
+                timeStamp.innerHTML = msg.timestamp + (msg.isUser ? '<i class="fa-solid fa-check-double text-blue-500 ml-1"></i>' : '');
 
                 bubble.appendChild(textContent);
                 bubble.appendChild(timeStamp);
@@ -416,7 +432,7 @@
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
 
-        // --- Lógica de Envío (Simula la llamada a Gemini) ---
+        // --- Lógica de Envío (SIMULANDO LLAMADA A GEMINI) ---
         function handleSend() {
             const text = chatInput.value.trim();
             if (!text) return;
@@ -439,11 +455,11 @@
             isTyping = true;
             renderChat();
 
-            // 2. Simular llamada a Gemini (Aquí iría tu 'sendMessageToGemini(text, 'whatsapp')')
+            // 2. Simular llamada a Gemini (Aquí integrarías tu 'sendMessageToGemini(text, 'whatsapp')' REAL)
             setTimeout(() => {
                 isTyping = false;
                 
-                // SIMULACIÓN DE RESPUESTA DE VALERIA (Alineada a la lógica entrenada)
+                // SIMULACIÓN DE RESPUESTA DE VALERIA (Basada en tu lógica entrenada)
                 let simulatedResponse = "Entendido. Gracias por el contexto. Para poder avanzar mejor, ¿te gustaría que te agende una llamada de 5 minutos o prefieres una videollamada para mostrarte el plan maestro?";
 
                 if (text.toLowerCase().includes("precio") || text.toLowerCase().includes("41000")) {
@@ -465,35 +481,36 @@
         }
 
         // --- Event Listeners ---
-        document.addEventListener('keydown', function(event) {
-            if (event.key === "Escape") {
-                closeModal();
-            }
-        });
+        window.onload = () => {
+            // Asegurar que la vista principal esté centrada y con ancho fijo
+            landingContent.style.maxWidth = `${MAX_WIDTH}px`;
+            landingContent.style.margin = '0 auto';
+            
+            // Inicializar eventos de envío
+            sendButton.addEventListener('click', handleSend);
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                }
+            });
+        }
 
-        sendButton.addEventListener('click', handleSend);
-        chatInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-            }
-        });
-
-        // Eventos de los CTA de la Landing (¡La clave!)
+        // Eventos de los CTA de la Landing (¡La clave de la trazabilidad!)
         document.querySelectorAll('[data-cta]').forEach(button => {
             button.addEventListener('click', (e) => {
-                e.preventDefault();
                 const context = button.getAttribute('data-cta');
                 openModal(context);
             });
         });
 
-        // Inicializar la vista (debe ser al final)
-        window.onload = () => {
-            // Asegurar que la vista principal esté centrada
-            landingContent.style.maxWidth = `${MAX_WIDTH}px`;
-            landingContent.style.margin = '0 auto';
-        }
+        // Asegurar que el overlay empiece oculto
+        modalOverlay.style.opacity = 0;
+        modalOverlay.addEventListener('transitionend', () => {
+             if (modalOverlay.style.opacity == 0) {
+                modalOverlay.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>
