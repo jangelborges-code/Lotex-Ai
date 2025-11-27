@@ -47,17 +47,7 @@
             transition: opacity 0.3s ease-in-out;
         }
         
-        /* Simulación de iPhone CSS Puro - SIN NOTCH */
-        .iphone-frame {
-            /* El borde grueso que simula el marco del teléfono */
-            box-shadow: 0 0 0 12px #1f2937, 0 0 0 14px #374151, 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border-radius: 40px; /* Bordes redondeados del teléfono */
-            overflow: hidden;
-            position: relative;
-            background: #000;
-        }
-        
-        /* HE ELIMINADO LA CLASE .notch DE AQUÍ */
+        /* He eliminado las clases y estilos relacionados con .iphone-frame */
     </style>
 </head>
 <body class="font-sans text-gray-800 antialiased overflow-x-hidden">
@@ -141,7 +131,7 @@
                 </div>
 
                 <!-- Columna Héroe (LOTEX) -->
-                <div class="bg-eficaxxBlue text-white p-10 rounded-3xl shadow-2xl relative overflow-hidden transform md:scale-105">
+                <div class="bg-eficaxxBlue text-white p-10 rounded-3xl shadow-2xl relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-eficaxxGreen rounded-full blur-3xl opacity-30 -mr-10 -mt-10"></div>
                     
                     <h3 class="font-heading text-3xl font-bold mb-6 flex items-center gap-3 text-white">
@@ -229,34 +219,31 @@
         </div>
     </footer>
 
-    <!-- MODAL DE DEMO (IPHONE STYLE) -->
+    <!-- MODAL DE DEMO (SIN FRAME DE IPHONE) -->
     <div id="demoModal" class="fixed inset-0 z-50 hidden">
         <!-- Overlay oscuro -->
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
         
         <!-- Contenedor Centrado -->
-        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
-            <!-- Frame del Teléfono (Pointer events auto para interactuar) -->
-            <div class="pointer-events-auto relative w-full max-w-[360px] h-[750px] max-h-[90vh] iphone-frame bg-white transform transition-all duration-300 scale-95 opacity-0" id="modalContent">
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <!-- Contenido del Modal (Ahora es solo el iframe en un contenedor simple) -->
+            <div class="relative w-full max-w-md md:max-w-lg lg:max-w-xl bg-white rounded-xl shadow-2xl transform transition-all duration-300 opacity-0" id="modalContent">
                 
-                <!-- HE ELIMINADO EL DIV NOTCH QUE ESTABA AQUI -->
-
-                <!-- Botón de Cerrar (Fuera del iframe pero visible) -->
-                <button onclick="closeModal()" class="absolute -top-12 right-0 md:-right-12 text-white hover:text-eficaxxGreen transition z-50">
+                <!-- Botón de Cerrar -->
+                <button onclick="closeModal()" class="absolute -top-12 right-0 text-white hover:text-eficaxxGreen transition z-50">
                     <i class="fa-solid fa-xmark text-4xl"></i>
-                    <span class="text-xs block text-center mt-1">Cerrar</span>
+                    <span class="text-xs block text-center mt-1 hidden sm:block">Cerrar</span>
                 </button>
 
                 <!-- El IFRAME con la demo -->
                 <iframe 
                     src="https://villa-querencia-37933698510.us-west1.run.app/" 
-                    class="w-full h-full border-0 bg-white"
+                    class="w-full border-0 bg-white rounded-xl"
+                    style="height: 600px;"
                     title="Demo Chatbot Valeria"
                     allow="microphone; camera; geolocation">
                 </iframe>
                 
-                <!-- Indicador de Home (Barra inferior iOS) -->
-                <div class="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-black rounded-full z-20 opacity-20"></div>
             </div>
         </div>
     </div>
@@ -273,14 +260,14 @@
             
             // Pequeño delay para la animación de entrada
             setTimeout(() => {
-                modalContent.classList.remove('scale-95', 'opacity-0');
-                modalContent.classList.add('scale-100', 'opacity-100');
+                modalContent.classList.remove('opacity-0');
+                modalContent.classList.add('opacity-100');
             }, 10);
         }
 
         function closeModal() {
-            modalContent.classList.remove('scale-100', 'opacity-100');
-            modalContent.classList.add('scale-95', 'opacity-0');
+            modalContent.classList.remove('opacity-100');
+            modalContent.classList.add('opacity-0');
             
             // Esperar a que termine la animación para ocultar
             setTimeout(() => {
