@@ -22,6 +22,8 @@
                         eficaxxBlue: '#004f8f',
                         eficaxxGreen: '#78ab00',
                         eficaxxDark: '#003366',
+                        eficaxxLight: '#f0f7ff',
+                        surface: '#ffffff',
                     },
                     fontFamily: {
                         sans: ['Open Sans', 'sans-serif'],
@@ -33,18 +35,48 @@
     </script>
 
     <style>
-        /* Estilos para ocultar la barra de scroll en el modal pero permitir scroll */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+        /* Estilos generales */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Animación modales */
+        #demoModal, #pricingModal { transition: opacity 0.3s ease-in-out; }
+
+        /* --- ESTILOS ESPECÍFICOS DE LA PROPUESTA COMERCIAL (Pricing) --- */
+        .card-base { transition: all 0.3s ease; border-top-width: 6px; }
+        
+        /* Nivel 1 */
+        .card-level-1 { height: auto; min-height: 520px; border-color: #94a3b8; }
+        
+        /* Nivel 2 */
+        .card-level-2 { 
+            height: auto; min-height: 620px; 
+            border-color: #78aa00; 
+            transform: scale(1.02); z-index: 10;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
-        /* Animación suave para el modal */
-        #demoModal {
-            transition: opacity 0.3s ease-in-out;
+        /* Nivel 3 */
+        .card-level-3 { height: auto; min-height: 720px; border-color: #004f8f; }
+
+        .check-icon { color: #78aa00; margin-right: 0.5rem; margin-top: 4px; flex-shrink: 0; }
+        .feature-list li { display: flex; align-items: start; margin-bottom: 0.75rem; font-size: 0.9rem; color: #475569; line-height: 1.4; }
+        .feature-strong { font-weight: 700; color: #003366; display: block; margin-bottom: 2px; }
+
+        /* Currency Toggle */
+        .toggle-checkbox:checked { right: 0; border-color: #78aa00; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #78aa00; }
+        .fade-out { opacity: 0; }
+        .price-transition { transition: opacity 0.3s ease; }
+
+        .recommended-badge {
+            background-color: #78aa00; color: white;
+            font-size: 0.75rem; font-weight: bold;
+            padding: 0.25rem 1rem; border-radius: 9999px;
+            position: absolute; top: -12px; left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            letter-spacing: 0.05em;
         }
     </style>
 </head>
@@ -63,7 +95,7 @@
                     <a href="#solucion" class="text-gray-600 hover:text-eficaxxBlue font-semibold transition">Nuestra Solución</a>
                     <a href="#demo" class="text-gray-600 hover:text-eficaxxBlue font-semibold transition">Demo</a>
                 </div>
-                <button onclick="openModal()" class="bg-eficaxxBlue text-white px-6 py-2.5 rounded-full font-bold hover:bg-eficaxxDark transition shadow-lg transform hover:scale-105">
+                <button onclick="openDemoModal()" class="bg-eficaxxBlue text-white px-6 py-2.5 rounded-full font-bold hover:bg-eficaxxDark transition shadow-lg transform hover:scale-105">
                     Probar Demo
                 </button>
             </div>
@@ -90,14 +122,18 @@
                 </p>
                 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button onclick="openModal()" class="group bg-eficaxxGreen text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 flex items-center gap-3">
+                    <!-- BOTÓN 1: VER LIVE DEMO (COLOR CAMBIADO A AZUL) -->
+                    <button onclick="openDemoModal()" class="group bg-eficaxxBlue text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 flex items-center gap-3">
                         <i class="fa-brands fa-whatsapp text-2xl"></i>
                         Ver Live Demo
                         <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
                     </button>
-                    <a href="#solucion" class="text-eficaxxBlue font-semibold hover:underline decoration-eficaxxGreen underline-offset-4">
-                        Entender la tecnología &rarr;
-                    </a>
+                    
+                    <!-- BOTÓN 2: VER PLANES (CAMBIADO DESDE LINK) -->
+                    <button onclick="openPricingModal()" class="group bg-white text-eficaxxDark border-2 border-eficaxxDark/10 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-50 transition-all flex items-center gap-2">
+                        Ver Planes
+                        <i class="fa-solid fa-tags text-eficaxxGreen"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -210,71 +246,317 @@
     <footer class="bg-eficaxxBlue text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="font-heading text-2xl font-bold mb-6">¿Listo para evolucionar tu fuerza de ventas?</h2>
-            <button onclick="openModal()" class="bg-eficaxxGreen text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-white hover:text-eficaxxGreen transition">
+            <button onclick="openDemoModal()" class="bg-eficaxxGreen text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-white hover:text-eficaxxGreen transition">
                 Probar Demo Interactiva
             </button>
             <p class="mt-8 text-blue-200 text-sm">© 2024 LOTEX AI. Desarrollado para Eficaxx Grupo Inmobiliario.</p>
         </div>
     </footer>
 
-    <!-- MODAL DE DEMO (AJUSTADO PARA MEJOR VISIBILIDAD) -->
+    <!-- MODAL 1: DEMO CHATBOT -->
     <div id="demoModal" class="fixed inset-0 z-50 hidden">
-        <!-- Overlay oscuro -->
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
-        
-        <!-- Contenedor Centrado -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeDemoModal()"></div>
         <div class="absolute inset-0 flex items-center justify-center p-4">
-            <!-- Contenido del Modal: Más ancho en pantallas grandes (lg:max-w-3xl) y mantiene buena altura -->
-            <div class="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-3xl bg-white rounded-xl shadow-2xl transform transition-all duration-300 opacity-0" id="modalContent">
-                
-                <!-- Botón de Cerrar -->
-                <button onclick="closeModal()" class="absolute -top-12 right-0 text-white hover:text-eficaxxGreen transition z-50">
+            <div class="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-3xl bg-white rounded-xl shadow-2xl transform transition-all duration-300 opacity-0" id="demoModalContent">
+                <button onclick="closeDemoModal()" class="absolute -top-12 right-0 text-white hover:text-eficaxxGreen transition z-50">
                     <i class="fa-solid fa-xmark text-4xl"></i>
                     <span class="text-xs block text-center mt-1 hidden sm:block">Cerrar</span>
                 </button>
-
-                <!-- El IFRAME con la demo -->
                 <iframe 
                     src="https://lotex-ai-real-estate-crm-37933698510.us-west1.run.app/" 
                     class="w-full border-0 bg-white rounded-xl"
-                    style="height: 80vh; min-height: 450px;" /* Uso de vh para mejor adaptación de alto */
+                    style="height: 80vh; min-height: 450px;" 
                     title="Demo Chatbot Valeria"
                     allow="microphone; camera; geolocation">
                 </iframe>
-                
             </div>
         </div>
     </div>
 
-    <!-- SCRIPTS (Sin cambios en la lógica JS) -->
+    <!-- MODAL 2: PRICING / PLANES (NUEVO) -->
+    <div id="pricingModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <!-- Overlay -->
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closePricingModal()"></div>
+        
+        <!-- Modal Wrapper -->
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-lg bg-slate-100 text-left shadow-xl transition-all sm:my-8 w-full max-w-7xl opacity-0" id="pricingModalContent">
+                
+                <!-- Close Button -->
+                <div class="absolute top-4 right-4 z-50">
+                    <button onclick="closePricingModal()" class="text-gray-400 hover:text-gray-600 bg-white rounded-full p-2 shadow-sm">
+                        <i class="fa-solid fa-xmark text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- CONTENIDO DE LA PROPUESTA (Insertado aquí) -->
+                <div class="px-4 sm:px-6 lg:px-8 py-12">
+        
+                    <!-- Header -->
+                    <div class="text-center mb-12">
+                        <h2 class="text-eficaxxGreen font-bold tracking-widest text-sm uppercase mb-2">Propuesta Comercial</h2>
+                        <h1 class="text-4xl font-extrabold text-eficaxxDark mb-4">Estrategia de Escalamiento Comercial</h1>
+                        <p class="text-gray-500 max-w-2xl mx-auto">Selecciona el nivel de sistematización adecuado para el momento actual de tu empresa.</p>
+                        
+                        <!-- Currency Toggle -->
+                        <div class="mt-8 inline-flex items-center bg-white rounded-full px-6 py-2 shadow-sm border border-gray-200">
+                            <span class="text-sm font-medium text-gray-500 mr-3">USD ($)</span>
+                            <div class="relative inline-block w-12 mr-3 align-middle select-none">
+                                <input type="checkbox" name="toggle" id="currency-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300 left-0 transition-all duration-300 top-0"/>
+                                <label for="currency-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer transition-colors duration-300"></label>
+                            </div>
+                            <span class="text-sm font-bold text-eficaxxDark">SOLES (S/)</span>
+                        </div>
+                    </div>
+            
+                    <!-- Pricing Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end text-left">
+            
+                        <!-- NIVEL 1: CO-PILOTO ESENCIAL -->
+                        <div class="bg-white rounded-xl shadow-sm hover:shadow-md p-6 card-base card-level-1 flex flex-col">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-bold text-gray-600">Opción 3: Co-Piloto Esencial</h3>
+                                <p class="text-xs text-gray-400 mt-1 uppercase tracking-wide font-semibold">Validación (1 Proyecto)</p>
+                            </div>
+            
+                            <!-- Price Block -->
+                            <div class="mb-6 pb-6 border-b border-gray-100">
+                                <p class="text-xs text-gray-400 font-semibold mb-1">Implementación (Setup)</p>
+                                <div class="price-transition text-2xl font-extrabold text-gray-700">
+                                    <span class="price-setup" data-usd="500 - 1,000" data-pen="1,800 - 3,600">500 - 1,000</span>
+                                    <span class="text-sm font-medium text-gray-400 currency-symbol">USD</span>
+                                </div>
+                                <div class="mt-3">
+                                    <p class="text-xs text-gray-400 font-semibold mb-1">Costo Mensual</p>
+                                    <div class="price-transition text-lg font-bold text-gray-500">
+                                        <span class="price-monthly" data-usd="90 - 250" data-pen="325 - 900">90 - 250</span>
+                                        <span class="text-xs font-normal currency-symbol">USD</span>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- Features -->
+                            <ul class="feature-list flex-1">
+                                <li>
+                                    <i class="fas fa-check check-icon"></i>
+                                    <div><span class="feature-strong">Alcance:</span> 1 Proyecto (Ej. Lotes Huaral).</div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check check-icon"></i>
+                                    <div><span class="feature-strong">Tecnología:</span> Chatbot reactivo de texto (Filtro Básico).</div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check check-icon"></i>
+                                    <div><span class="feature-strong">Rol Vendedor:</span> Simbiosis Manual. Chatbot es el asistente, El Vendedor participa.</div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check check-icon"></i>
+                                    <div><span class="feature-strong">Gestión:</span> Recepción &rarr; Filtro &rarr; Reporte para CRM´s.</div>
+                                </li>
+                                <li class="opacity-50 mt-4">
+                                    <i class="fas fa-times text-gray-300 mr-2 mt-1"></i>
+                                    <span class="text-xs">Sin generación de imágenes</span>
+                                </li>
+                            </ul>
+                            <div class="mt-auto pt-6 text-center">
+                                <p class="text-xs text-gray-400 italic">Comisión éxito: 0.5% - 1%</p>
+                            </div>
+                        </div>
+            
+                        <!-- NIVEL 2: ESCALADO INTELIGENTE (Middle Step) -->
+                        <div class="bg-white rounded-xl relative p-8 card-base card-level-2 flex flex-col border-t-eficaxxGreen">
+                            <div class="recommended-badge">RECOMENDADO</div>
+                            <div class="mb-4">
+                                <h3 class="text-xl font-bold text-eficaxxGreen">Opción 2: Escalado Inteligente</h3>
+                                <p class="text-xs text-eficaxxGreen mt-1 uppercase tracking-wide font-bold opacity-80">Sistematización (1-3 Proyectos)</p>
+                            </div>
+            
+                            <!-- Price Block -->
+                            <div class="mb-6 pb-6 border-b border-gray-100 bg-green-50/30 -mx-8 px-8 py-4">
+                                <p class="text-xs text-eficaxxGreen font-bold mb-1">Implementación (Setup)</p>
+                                <div class="price-transition text-3xl font-extrabold text-gray-800">
+                                    <span class="price-setup" data-usd="1,000 - 3,000" data-pen="3,600 - 10,800">1,000 - 3,000</span>
+                                    <span class="text-lg font-medium text-gray-500 currency-symbol">USD</span>
+                                </div>
+                                <div class="mt-3">
+                                    <p class="text-xs text-eficaxxGreen font-bold mb-1">Costo Mensual (+20% IA Gen)</p>
+                                    <div class="price-transition text-xl font-bold text-gray-600">
+                                        <span class="price-monthly" data-usd="150 - 350" data-pen="540 - 1,260">150 - 350</span>
+                                        <span class="text-xs font-normal currency-symbol">USD</span>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- Features -->
+                            <ul class="feature-list flex-1">
+                                <li>
+                                    <i class="fas fa-layer-group text-eficaxxGreen mr-2 mt-1"></i>
+                                    <div><span class="feature-strong text-eficaxxDark">Alcance:</span> 2-3 Proyectos Simultáneos.</div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-robot text-eficaxxGreen mr-2 mt-1"></i>
+                                    <div><span class="feature-strong text-eficaxxDark">Tecnología IA:</span> Generativa Multimodal (Texto + Imágenes) + Agendamiento.</div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-user-tie text-eficaxxGreen mr-2 mt-1"></i>
+                                    <div><span class="feature-strong text-eficaxxDark">Rol Vendedor:</span> Recibe Notificaciones de Llamadas y Citas Programadas.</div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-chart-pie text-eficaxxGreen mr-2 mt-1"></i>
+                                    <div><span class="feature-strong text-eficaxxDark">Gestión:</span> Recepción &rarr; Filtro, Nutrición &rarr; Asignacion Tareas &rarr; Reportes y KPI´s &rarr; KPIs.</div>
+                                </li>
+                            </ul>
+                            <div class="mt-auto pt-6 text-center">
+                                <p class="text-xs text-gray-400 italic">Comisión éxito: 0.5% - 1%</p>
+                            </div>
+                        </div>
+            
+                        <!-- NIVEL 3: GROWTH PARTNER (Highest Step) -->
+                        <div class="bg-slate-50 rounded-xl shadow-sm p-6 card-base card-level-3 flex flex-col border border-gray-200">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-bold text-eficaxxBlue">Opción 1: Growth Partner</h3>
+                                <p class="text-xs text-eficaxxBlue mt-1 uppercase tracking-wide font-semibold opacity-70">Empresa Completa (MKT + Ventas)</p>
+                            </div>
+            
+                            <!-- Price Block -->
+                            <div class="mb-6 pb-6 border-b border-gray-200">
+                                <p class="text-xs text-eficaxxBlue font-bold mb-1">Implementación (Setup)</p>
+                                <div class="price-transition text-3xl font-extrabold text-eficaxxDark">
+                                    <span class="price-setup" data-usd="3,000 - 5,000" data-pen="10,800 - 18,000">3,000 - 5,000</span>
+                                    <span class="text-lg font-medium text-gray-400 currency-symbol">USD</span>
+                                </div>
+                                <div class="mt-3">
+                                    <p class="text-xs text-eficaxxBlue font-bold mb-1">Costo Mensual</p>
+                                    <div class="price-transition text-xl font-bold text-gray-500">
+                                        Variable
+                                        <span class="text-xs font-normal italic ml-1">(Según Ads)</span>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- Features -->
+                            <ul class="feature-list flex-1">
+                                <li>
+                                    <i class="fas fa-building text-eficaxxBlue mr-2 mt-1"></i>
+                                    <div><span class="feature-strong">Alcance:</span> Estructura Integral de Empresa.</div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-network-wired text-eficaxxBlue mr-2 mt-1"></i>
+                                    <div><span class="feature-strong">Tecnología:</span> Ecosistema Completo (Embudos + Ads Opt + IA Gen).</div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-users-cog text-eficaxxBlue mr-2 mt-1"></i>
+                                    <div><span class="feature-strong">Rol Vendedor:</span> Supervisión de Dashboards y Gestión de Equipos.</div>
+                                </li>
+                                <li>
+                                    <i class="fas fa-search-dollar text-eficaxxBlue mr-2 mt-1"></i>
+                                    <div><span class="feature-strong">Gestión:</span> Todo lo anterior + Optimización de pauta + Integracion de CRM Personalizado.</div>
+                                </li>
+                            </ul>
+                            <div class="mt-auto pt-6 text-center">
+                                <p class="text-xs text-gray-400 italic">Comisión éxito: A negociar</p>
+                            </div>
+                        </div>
+            
+                    </div>
+            
+                    <div class="mt-12 text-center text-xs text-gray-400">
+                        <p>Tasa de cambio referencial aplicada: 3.60 PEN. Los precios finales pueden variar levemente.</p>
+                    </div>
+                </div>
+                <!-- FIN CONTENIDO PROPUESTA -->
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
     <script>
-        const modal = document.getElementById('demoModal');
-        const modalContent = document.getElementById('modalContent');
         const body = document.body;
 
-        function openModal() {
-            modal.classList.remove('hidden');
+        // --- LÓGICA MODAL DEMO ---
+        const demoModal = document.getElementById('demoModal');
+        const demoModalContent = document.getElementById('demoModalContent');
+
+        function openDemoModal() {
+            demoModal.classList.remove('hidden');
             body.classList.add('overflow-hidden'); 
-            
             setTimeout(() => {
-                modalContent.classList.remove('opacity-0');
-                modalContent.classList.add('opacity-100');
+                demoModalContent.classList.remove('opacity-0');
+                demoModalContent.classList.add('opacity-100');
             }, 10);
         }
 
-        function closeModal() {
-            modalContent.classList.remove('opacity-100');
-            modalContent.classList.add('opacity-0');
-            
+        function closeDemoModal() {
+            demoModalContent.classList.remove('opacity-100');
+            demoModalContent.classList.add('opacity-0');
             setTimeout(() => {
-                modal.classList.add('hidden');
+                demoModal.classList.add('hidden');
                 body.classList.remove('overflow-hidden');
             }, 300);
         }
 
+        // --- LÓGICA MODAL PRICING (PLANES) ---
+        const pricingModal = document.getElementById('pricingModal');
+        const pricingModalContent = document.getElementById('pricingModalContent');
+
+        function openPricingModal() {
+            pricingModal.classList.remove('hidden');
+            body.classList.add('overflow-hidden');
+            setTimeout(() => {
+                pricingModalContent.classList.remove('opacity-0');
+                pricingModalContent.classList.add('opacity-100');
+            }, 10);
+        }
+
+        function closePricingModal() {
+            pricingModalContent.classList.remove('opacity-100');
+            pricingModalContent.classList.add('opacity-0');
+            setTimeout(() => {
+                pricingModal.classList.add('hidden');
+                body.classList.remove('overflow-hidden');
+            }, 300);
+        }
+
+        // --- LÓGICA CAMBIO DE MONEDA ---
+        const toggle = document.getElementById('currency-toggle');
+        const setupPrices = document.querySelectorAll('.price-setup');
+        const monthlyPrices = document.querySelectorAll('.price-monthly');
+        const symbols = document.querySelectorAll('.currency-symbol');
+        const priceContainers = document.querySelectorAll('.price-transition');
+
+        if(toggle) {
+            toggle.addEventListener('change', function() {
+                const isSoles = this.checked;
+
+                // Fade out
+                priceContainers.forEach(el => el.classList.add('fade-out'));
+
+                setTimeout(() => {
+                    // Update text
+                    symbols.forEach(sym => sym.textContent = isSoles ? 'S/' : 'USD');
+                    
+                    setupPrices.forEach(price => {
+                        price.textContent = isSoles ? price.dataset.pen : price.dataset.usd;
+                    });
+                    
+                    monthlyPrices.forEach(price => {
+                        if(price.dataset.usd) {
+                            price.textContent = isSoles ? price.dataset.pen : price.dataset.usd;
+                        }
+                    });
+
+                    // Fade in
+                    priceContainers.forEach(el => el.classList.remove('fade-out'));
+                }, 300);
+            });
+        }
+
+        // Cerrar con Escape
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") {
-                closeModal();
+                closeDemoModal();
+                closePricingModal();
             }
         });
     </script>
