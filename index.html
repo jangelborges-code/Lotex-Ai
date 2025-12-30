@@ -38,30 +38,17 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        #pricingModal { transition: opacity 0.3s ease-in-out; }
-
-        /* Pricing Grid */
-        .pricing-grid {
-            display: grid;
-            gap: 1.5rem;
-            grid-template-columns: repeat(1, minmax(0, 1fr));
-        }
-        @media (min-width: 768px) { .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (min-width: 1280px) { .pricing-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-
+        .modal-transition { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
         .card-base { transition: all 0.3s ease; border-top-width: 6px; }
-        .card-level-1 { height: auto; min-height: 520px; border-color: #94a3b8; }
-        .card-level-2 { 
-            height: auto; min-height: 520px; 
-            border-color: #78aa00; 
-            transform: scale(1.02); z-index: 10;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .card-level-3 { height: auto; min-height: 520px; border-color: #004f8f; }
-        .card-level-custom { height: auto; min-height: 520px; border-color: #f59e0b; }
+        
+        /* Niveles de tarjetas */
+        .card-level-1 { height: auto; min-height: 580px; border-color: #94a3b8; }
+        .card-level-2 { height: auto; min-height: 620px; border-color: #78aa00; transform: scale(1.02); z-index: 10; }
+        .card-level-3 { height: auto; min-height: 580px; border-color: #004f8f; }
+        .card-level-custom { height: auto; min-height: 650px; border-color: #f59e0b; }
 
         .check-icon { color: #78aa00; margin-right: 0.5rem; margin-top: 4px; flex-shrink: 0; }
-        .feature-list li { display: flex; align-items: start; margin-bottom: 0.75rem; font-size: 0.9rem; color: #475569; line-height: 1.4; }
+        .feature-list li { display: flex; align-items: start; margin-bottom: 0.75rem; font-size: 0.85rem; color: #475569; line-height: 1.4; }
         .feature-strong { font-weight: 700; color: #003366; display: block; margin-bottom: 2px; }
 
         .toggle-checkbox:checked { right: 0; border-color: #78aa00; }
@@ -71,12 +58,9 @@
 
         .recommended-badge {
             background-color: #78aa00; color: white;
-            font-size: 0.75rem; font-weight: bold;
-            padding: 0.25rem 1rem; border-radius: 9999px;
-            position: absolute; top: -12px; left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            letter-spacing: 0.05em;
+            font-size: 0.7rem; font-weight: bold; padding: 0.2rem 1rem; border-radius: 9999px;
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); letter-spacing: 0.05em;
         }
     </style>
 </head>
@@ -94,9 +78,10 @@
                     <a href="#problema" class="text-gray-600 hover:text-eficaxxBlue font-semibold transition">El Problema</a>
                     <a href="#solucion" class="text-gray-600 hover:text-eficaxxBlue font-semibold transition">Nuestra Solución</a>
                 </div>
-                <button onclick="openPricingModal()" class="bg-eficaxxBlue text-white px-6 py-2.5 rounded-full font-bold hover:bg-eficaxxDark transition shadow-lg">
-                    Ver Planes
-                </button>
+                <div class="flex gap-3">
+                    <button onclick="openStandardPricing()" class="text-eficaxxBlue font-bold px-4 hover:text-eficaxxDark transition">Ver Planes</button>
+                    <button onclick="openAccessModal()" class="bg-eficaxxBlue text-white px-6 py-2.5 rounded-full font-bold hover:bg-eficaxxDark transition shadow-lg">Personalizado</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -120,14 +105,11 @@
                 </p>
                 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <!-- BOTÓN 1: VER PLANES -->
-                    <button onclick="openPricingModal()" class="group bg-white text-eficaxxDark border-2 border-eficaxxDark/10 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-50 transition-all flex items-center gap-2 w-full sm:w-auto justify-center">
+                    <button onclick="openStandardPricing()" class="group bg-white text-eficaxxDark border-2 border-eficaxxDark/10 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-50 transition-all flex items-center gap-2 w-full sm:w-auto justify-center shadow-sm">
                         Ver Planes
                         <i class="fa-solid fa-tags text-eficaxxGreen"></i>
                     </button>
-
-                    <!-- BOTÓN 2: PLAN PERSONALIZADO -->
-                    <button onclick="openPricingModal()" class="group bg-eficaxxGreen text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:bg-emerald-600 transition-all transform hover:-translate-y-1 flex items-center gap-2 w-full sm:w-auto justify-center">
+                    <button onclick="openAccessModal()" class="group bg-eficaxxGreen text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl hover:bg-emerald-600 transition-all transform hover:-translate-y-1 flex items-center gap-2 w-full sm:w-auto justify-center">
                         Ver Plan Personalizado
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                     </button>
@@ -179,115 +161,176 @@
     <footer class="bg-eficaxxBlue text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="font-heading text-2xl font-bold mb-6">¿Listo para evolucionar tu fuerza de ventas?</h2>
-            <button onclick="openPricingModal()" class="bg-eficaxxGreen text-white px-8 py-3 rounded-full font-bold shadow-lg hover:bg-white hover:text-eficaxxGreen transition">
-                Consultar Planes
-            </button>
             <p class="mt-8 text-blue-200 text-sm">© 2024 LOTEX AI. Desarrollado para Eficaxx Grupo Inmobiliario.</p>
         </div>
     </footer>
 
-    <!-- MODAL PRICING -->
-    <div id="pricingModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
-        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closePricingModal()"></div>
+    <!-- MODAL 1: FORMULARIO DE ACCESO -->
+    <div id="accessModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeAccessModal()"></div>
+        <div class="relative bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md modal-transition opacity-0 scale-95" id="accessModalContent">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-eficaxxDark">Propuestas Personalizadas</h2>
+                <p class="text-gray-500 text-sm mt-2">Ingrese sus credenciales para continuar</p>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="userInput" class="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-eficaxxBlue/20" placeholder="Usuario">
+                <input type="password" id="passInput" class="w-full px-4 py-3 rounded-lg border border-gray-200 outline-none focus:ring-2 focus:ring-eficaxxBlue/20" placeholder="Contraseña">
+                <div id="errorMessage" class="text-red-500 text-sm hidden text-center">Credenciales incorrectas</div>
+                <button onclick="validateAccess()" class="w-full bg-eficaxxBlue text-white py-4 rounded-lg font-bold hover:bg-eficaxxDark transition shadow-lg">Ingresar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: PLANES ESTÁNDAR (Como en la imagen) -->
+    <div id="standardPricingModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeStandardPricing()"></div>
         <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
-            <div class="relative transform overflow-hidden rounded-lg bg-slate-100 text-left shadow-xl transition-all sm:my-8 w-full max-w-7xl opacity-0" id="pricingModalContent">
+            <div class="relative transform overflow-hidden rounded-lg bg-slate-100 text-left shadow-xl modal-transition w-full max-w-7xl opacity-0" id="standardPricingModalContent">
                 
                 <div class="absolute top-4 right-4 z-50">
-                    <button onclick="closePricingModal()" class="text-gray-400 hover:text-gray-600 bg-white rounded-full p-2 shadow-sm">
-                        <i class="fa-solid fa-xmark text-2xl"></i>
-                    </button>
+                    <button onclick="closeStandardPricing()" class="text-gray-400 hover:text-gray-600 bg-white rounded-full p-2 shadow-sm"><i class="fa-solid fa-xmark text-2xl"></i></button>
                 </div>
 
                 <div class="px-4 sm:px-6 lg:px-8 py-12">
                     <div class="text-center mb-12">
                         <h2 class="text-eficaxxGreen font-bold tracking-widest text-sm uppercase mb-2">Propuesta Comercial</h2>
-                        <h1 class="text-4xl font-extrabold text-eficaxxDark mb-4">Planes de Implementación</h1>
+                        <h1 class="text-4xl font-extrabold text-eficaxxDark mb-4">Estrategia de Escalamiento Comercial</h1>
                         
                         <div class="mt-8 inline-flex items-center bg-white rounded-full px-6 py-2 shadow-sm border border-gray-200">
-                            <span class="text-sm font-medium text-gray-500 mr-3">USD ($)</span>
+                            <span class="text-xs font-medium text-gray-500 mr-3">USD ($)</span>
                             <div class="relative inline-block w-12 mr-3 align-middle select-none">
-                                <input type="checkbox" name="toggle" id="currency-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300 left-0 transition-all duration-300 top-0"/>
-                                <label for="currency-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer transition-colors duration-300"></label>
+                                <input type="checkbox" id="standard-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300 left-0 transition-all duration-300 top-0"/>
+                                <label for="standard-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer transition-colors duration-300"></label>
                             </div>
-                            <span class="text-sm font-bold text-eficaxxDark">SOLES (S/)</span>
+                            <span class="text-xs font-bold text-eficaxxDark">SOLES (S/)</span>
                         </div>
                     </div>
             
-                    <div class="pricing-grid items-start text-left">
-            
-                        <!-- PLAN PERSONALIZADO -->
-                        <div class="bg-white rounded-xl shadow-lg p-6 card-base card-level-custom flex flex-col relative overflow-hidden">
-                            <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] px-3 py-1 font-bold uppercase">A Medida</div>
-                            <div class="mb-4">
-                                <h3 class="text-lg font-bold text-amber-600">Plan Personalizado</h3>
-                                <p class="text-xs text-gray-400 mt-1 uppercase tracking-wide font-semibold">Máximo Rendimiento</p>
-                            </div>
-            
-                            <div class="mb-6 pb-6 border-b border-gray-100">
-                                <p class="text-xs text-amber-600 font-semibold mb-1">Implementación (Setup)</p>
-                                <div class="price-transition text-2xl font-extrabold text-gray-700">
-                                    <span class="price-setup" data-usd="805" data-pen="2,900">805</span>
-                                    <span class="text-sm font-medium text-gray-400 currency-symbol">USD</span>
-                                </div>
-                                <div class="mt-3">
-                                    <p class="text-xs text-amber-600 font-semibold mb-1">Costo Mensual</p>
-                                    <div class="price-transition text-lg font-bold text-gray-500">
-                                        <span class="price-monthly" data-usd="180" data-pen="650">180</span>
-                                        <span class="text-xs font-normal currency-symbol">USD</span>
-                                    </div>
-                                </div>
-                            </div>
-            
-                            <ul class="feature-list flex-1">
-                                <li class="bg-amber-50 p-2 rounded-lg mb-4">
-                                    <i class="fas fa-bolt text-amber-500 mr-2 mt-1"></i>
-                                    <span class="text-xs font-bold text-amber-700">Incluye todo lo del Plan Esencial +</span>
-                                </li>
-                                <li><i class="fas fa-check check-icon"></i> <div><span class="feature-strong">Mensajes Ilimitados:</span> Durante las primeras 48h del lead.</div></li>
-                                <li><i class="fas fa-check check-icon"></i> <div><span class="feature-strong">Pase a Asesor:</span> Derivación directa tras el filtro inicial.</div></li>
-                            </ul>
-                        </div>
-
-                        <!-- NIVEL 1 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+                        <!-- OPCION 3 -->
                         <div class="bg-white rounded-xl shadow-sm p-6 card-base card-level-1 flex flex-col">
-                            <div class="mb-4 text-lg font-bold text-gray-600">Opción 3: Co-Piloto Esencial</div>
-                            <div class="mb-6 pb-6 border-b border-gray-100">
-                                <div class="price-transition text-2xl font-extrabold text-gray-700">
-                                    <span class="price-setup" data-usd="500 - 1,000" data-pen="1,800 - 3,600">500 - 1,000</span>
-                                </div>
-                                <div class="mt-3 text-lg font-bold text-gray-500">
-                                    <span class="price-monthly" data-usd="90 - 250" data-pen="325 - 900">90 - 250</span>
+                            <div class="mb-4">
+                                <h3 class="text-lg font-bold text-gray-600">Opción 3: Co-Piloto Esencial</h3>
+                                <p class="text-[10px] text-gray-400 font-bold uppercase">VALIDACIÓN (1 PROYECTO)</p>
+                            </div>
+                            <div class="mb-6 pb-6 border-b border-gray-100 price-transition">
+                                <p class="text-[10px] font-bold text-gray-400 mb-1">Implementación (Setup)</p>
+                                <span class="price-setup text-2xl font-extrabold text-gray-700" data-usd="500 - 1,000" data-pen="1,800 - 3,600">500 - 1,000</span> <span class="text-xs currency-symbol">USD</span>
+                                <div class="mt-3">
+                                    <p class="text-[10px] font-bold text-gray-400 mb-1">Costo Mensual</p>
+                                    <span class="price-monthly text-lg font-bold text-gray-500" data-usd="90 - 250" data-pen="325 - 900">90 - 250</span> <span class="text-xs currency-symbol">USD</span>
                                 </div>
                             </div>
                             <ul class="feature-list flex-1">
-                                <li><i class="fas fa-check check-icon"></i> <div>Chatbot reactivo de texto.</div></li>
+                                <li><i class="fas fa-check check-icon"></i> <div><span class="feature-strong">Alcance:</span> 1 Proyecto (Ej. Lotes Huaral).</div></li>
+                                <li><i class="fas fa-check check-icon"></i> <div><span class="feature-strong">Tecnología:</span> Chatbot reactivo de texto (Filtro Básico).</div></li>
+                                <li><i class="fas fa-check check-icon"></i> <div><span class="feature-strong">Rol Vendedor:</span> Simbiosis Manual. Chatbot es el asistente, El Vendedor participa.</div></li>
+                                <li><i class="fas fa-check check-icon"></i> <div><span class="feature-strong">Gestión:</span> Recepción → Filtro → Reporte para CRM's.</div></li>
                             </ul>
                         </div>
-            
-                        <!-- NIVEL 2 -->
-                        <div class="bg-white rounded-xl relative p-6 card-base card-level-2 flex flex-col">
+                        <!-- OPCION 2 -->
+                        <div class="bg-white rounded-xl shadow-xl p-8 card-base card-level-2 flex flex-col relative">
                             <div class="recommended-badge">RECOMENDADO</div>
-                            <div class="mb-4 text-xl font-bold text-eficaxxGreen">Opción 2: Escalado Inteligente</div>
-                            <div class="mb-6 pb-6 border-b border-gray-100">
-                                <div class="price-transition text-2xl font-extrabold text-gray-800">
-                                    <span class="price-setup" data-usd="1,000 - 3,000" data-pen="3,600 - 10,800">1,000 - 3,000</span>
+                            <div class="mb-4">
+                                <h3 class="text-xl font-bold text-eficaxxGreen">Opción 2: Escalado Inteligente</h3>
+                                <p class="text-[10px] text-eficaxxGreen font-bold uppercase">SISTEMATIZACIÓN (1-3 PROYECTOS)</p>
+                            </div>
+                            <div class="mb-6 pb-6 border-b border-gray-100 price-transition">
+                                <p class="text-[10px] font-bold text-eficaxxGreen mb-1">Implementación (Setup)</p>
+                                <span class="price-setup text-3xl font-extrabold text-gray-800" data-usd="1,000 - 3,000" data-pen="3,600 - 10,800">1,000 - 3,000</span> <span class="text-xs currency-symbol">USD</span>
+                                <div class="mt-3">
+                                    <p class="text-[10px] font-bold text-eficaxxGreen mb-1">Costo Mensual (+20% IA Gen)</p>
+                                    <span class="price-monthly text-xl font-bold text-gray-600" data-usd="150 - 350" data-pen="540 - 1,260">150 - 350</span> <span class="text-xs currency-symbol">USD</span>
                                 </div>
                             </div>
                             <ul class="feature-list flex-1">
-                                <li><i class="fas fa-check check-icon"></i> <div>IA Multimodal (Texto + Imágenes).</div></li>
+                                <li><i class="fas fa-layer-group text-eficaxxGreen mr-2 mt-1"></i> <div><span class="feature-strong">Alcance:</span> 2-3 Proyectos Simultáneos.</div></li>
+                                <li><i class="fas fa-robot text-eficaxxGreen mr-2 mt-1"></i> <div><span class="feature-strong">Tecnología IA:</span> Generativa Multimodal (Texto + Imágenes) + Agendamiento.</div></li>
+                                <li><i class="fas fa-user-tie text-eficaxxGreen mr-2 mt-1"></i> <div><span class="feature-strong">Rol Vendedor:</span> Recibe Notificaciones de Llamadas y Citas Programadas.</div></li>
+                                <li><i class="fas fa-chart-pie text-eficaxxGreen mr-2 mt-1"></i> <div><span class="feature-strong">Gestión:</span> Recepción → Filtro, Nutrición → Asignación Tareas → Reportes y KPI's → KPIs.</div></li>
                             </ul>
                         </div>
-            
-                        <!-- NIVEL 3 -->
-                        <div class="bg-slate-50 rounded-xl shadow-sm p-6 card-base card-level-3 flex flex-col">
-                            <div class="mb-4 text-eficaxxBlue font-bold">Opción 1: Growth Partner</div>
-                            <div class="mb-6 pb-6 border-b border-gray-200">
-                                <div class="price-transition text-2xl font-extrabold text-eficaxxDark">
-                                    <span class="price-setup" data-usd="3,000 - 5,000" data-pen="10,800 - 18,000">3,000 - 5,000</span>
+                        <!-- OPCION 1 -->
+                        <div class="bg-slate-50 rounded-xl shadow-sm p-6 card-base card-level-3 flex flex-col border border-gray-200">
+                            <div class="mb-4">
+                                <h3 class="text-lg font-bold text-eficaxxBlue">Opción 1: Growth Partner</h3>
+                                <p class="text-[10px] text-eficaxxBlue font-bold uppercase">EMPRESA COMPLETA (MKT + VENTAS)</p>
+                            </div>
+                            <div class="mb-6 pb-6 border-b border-gray-200 price-transition">
+                                <p class="text-[10px] font-bold text-eficaxxBlue mb-1">Implementación (Setup)</p>
+                                <span class="price-setup text-3xl font-extrabold text-eficaxxDark" data-usd="3,000 - 5,000" data-pen="10,800 - 18,000">3,000 - 5,000</span> <span class="text-xs currency-symbol">USD</span>
+                                <div class="mt-3">
+                                    <p class="text-[10px] font-bold text-eficaxxBlue mb-1">Costo Mensual</p>
+                                    <span class="text-xl font-bold text-gray-500">Variable <small class="text-[10px] font-normal italic">(Según Ads)</small></span>
                                 </div>
                             </div>
                             <ul class="feature-list flex-1">
-                                <li><i class="fas fa-check check-icon"></i> <div>Estructura Integral MKT + Ventas.</div></li>
+                                <li><i class="fas fa-building text-eficaxxBlue mr-2 mt-1"></i> <div><span class="feature-strong">Alcance:</span> Estructura Integral de Empresa.</div></li>
+                                <li><i class="fas fa-network-wired text-eficaxxBlue mr-2 mt-1"></i> <div><span class="feature-strong">Tecnología:</span> Ecosistema Completo (Embudos + Ads Opt + IA Gen).</div></li>
+                                <li><i class="fas fa-users-cog text-eficaxxBlue mr-2 mt-1"></i> <div><span class="feature-strong">Rol Vendedor:</span> Supervisión de Dashboards y Gestión de Equipos.</div></li>
+                                <li><i class="fas fa-search-dollar text-eficaxxBlue mr-2 mt-1"></i> <div><span class="feature-strong">Gestión:</span> Todo lo anterior + Optimización de pauta + Integracion de CRM Personalizado.</div></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: PROPUESTA PERSONALIZADA (VILLA QUERENCIA) -->
+    <div id="personalizedPricingModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closePersonalizedPricing()"></div>
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-3xl bg-slate-100 text-left shadow-xl modal-transition w-full max-w-2xl opacity-0" id="personalizedPricingModalContent">
+                <div class="absolute top-6 right-6 z-50">
+                    <button onclick="closePersonalizedPricing()" class="text-gray-400 hover:text-gray-600 bg-white rounded-full p-2 shadow-sm"><i class="fa-solid fa-xmark text-2xl"></i></button>
+                </div>
+                <div class="px-6 py-12 sm:px-12">
+                    <div class="text-center mb-10">
+                        <h2 class="text-eficaxxGreen font-bold tracking-widest text-sm uppercase mb-2">Propuesta Comercial Personalizada</h2>
+                        <h1 class="text-4xl font-extrabold text-eficaxxDark mb-6 tracking-tight">Villa Querencia</h1>
+                        
+                        <div class="inline-flex items-center bg-white rounded-full px-6 py-2 shadow-sm border border-gray-200">
+                            <span class="text-[10px] font-bold text-gray-400 mr-3">USD ($)</span>
+                            <div class="relative inline-block w-12 mr-3 align-middle select-none">
+                                <input type="checkbox" id="custom-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-gray-300 left-0 transition-all duration-300 top-0"/>
+                                <label for="custom-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer transition-colors duration-300"></label>
+                            </div>
+                            <span class="text-[10px] font-bold text-eficaxxDark">SOLES (S/)</span>
+                        </div>
+                    </div>
+            
+                    <div class="flex justify-center">
+                        <div class="bg-white rounded-3xl shadow-xl p-8 card-base card-level-custom w-full max-w-md relative border border-gray-100">
+                            <div class="absolute top-0 right-0 bg-amber-500 text-white text-[10px] px-4 py-1.5 font-bold uppercase rounded-bl-xl shadow-sm">A MEDIDA</div>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-2xl font-extrabold text-amber-600">Plan de Escalamiento</h3>
+                                <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-widest font-bold">MÁXIMO RENDIMIENTO - FULL ESTRATEGIA</p>
+                            </div>
+            
+                            <div class="grid grid-cols-2 gap-4 mb-8 pb-8 border-b border-gray-100 price-transition">
+                                <div>
+                                    <p class="text-[9px] text-amber-600 font-bold uppercase mb-1">Implementación (Setup)</p>
+                                    <span class="price-setup text-3xl font-extrabold text-gray-800" data-usd="805" data-pen="2,900">2,900</span> <span class="text-sm font-bold text-gray-400 currency-symbol">S/</span>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] text-amber-600 font-bold uppercase mb-1">Costo Mensual</p>
+                                    <span class="price-monthly text-2xl font-extrabold text-gray-600" data-usd="180" data-pen="650">650</span> <span class="text-sm font-bold text-gray-400 currency-symbol">S/</span>
+                                </div>
+                            </div>
+            
+                            <ul class="feature-list">
+                                <li class="bg-amber-50 p-3 rounded-xl mb-6 flex items-center gap-3">
+                                    <i class="fas fa-sparkles text-amber-500 text-lg"></i>
+                                    <span class="text-[11px] font-bold text-amber-800">Estrategia Premium: Entrenamiento con historial real de WhatsApp.</span>
+                                </li>
+                                <li><i class="fas fa-check-circle check-icon text-lg"></i> <div><span class="feature-strong">Ventana de 2 días:</span> Filtrado y atención masiva ilimitada durante los primeros 2 días de interacción.</div></li>
+                                <li><i class="fas fa-check-circle check-icon text-lg"></i> <div><span class="feature-strong">Redirección Inteligente:</span> Post-48h, derivación cortés a asesor humano para asegurar el cierre sin costos ocultos.</div></li>
+                                <li><i class="fas fa-check-circle check-icon text-lg"></i> <div><span class="feature-strong">BONO: 10 A/B Nurturing Tests:</span> Pruebas de seguimiento optimizadas para maximizar citas agendadas.</div></li>
+                                <li><i class="fas fa-check-circle check-icon text-lg"></i> <div><span class="feature-strong">Reporte de KPIs:</span> Tablero de control de conversiones, calidad de leads y eficiencia del chatbot.</div></li>
+                                <li><i class="fas fa-check-circle check-icon text-lg"></i> <div><span class="feature-strong">Filtro Anticuriosos:</span> Traspaso fidedigno enfocado únicamente en leads con perfil de inversión real.</div></li>
                             </ul>
                         </div>
                     </div>
@@ -299,52 +342,81 @@
     <script>
         const body = document.body;
 
-        function openPricingModal() {
-            const modal = document.getElementById('pricingModal');
-            const content = document.getElementById('pricingModalContent');
+        // MODAL ACCESO
+        function openAccessModal() {
+            const modal = document.getElementById('accessModal');
+            const content = document.getElementById('accessModalContent');
             modal.classList.remove('hidden');
             body.classList.add('overflow-hidden');
-            setTimeout(() => {
-                content.classList.remove('opacity-0');
-                content.classList.add('opacity-100');
-            }, 10);
+            setTimeout(() => { content.classList.remove('opacity-0', 'scale-95'); content.classList.add('opacity-100', 'scale-100'); }, 10);
+        }
+        function closeAccessModal() {
+            const modal = document.getElementById('accessModal');
+            const content = document.getElementById('accessModalContent');
+            content.classList.remove('opacity-100', 'scale-100'); content.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); body.classList.remove('overflow-hidden'); }, 300);
+        }
+        function validateAccess() {
+            const u = document.getElementById('userInput').value.trim().toLowerCase();
+            const p = document.getElementById('passInput').value.trim().toLowerCase();
+            if (u === "villa querencia" && p === "villa2026") {
+                closeAccessModal();
+                setTimeout(openPersonalizedPricing, 400);
+            } else {
+                document.getElementById('errorMessage').classList.remove('hidden');
+            }
         }
 
-        function closePricingModal() {
-            const modal = document.getElementById('pricingModal');
-            const content = document.getElementById('pricingModalContent');
-            content.classList.remove('opacity-100');
-            content.classList.add('opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                body.classList.remove('overflow-hidden');
-            }, 300);
+        // MODAL ESTÁNDAR
+        function openStandardPricing() {
+            const modal = document.getElementById('standardPricingModal');
+            const content = document.getElementById('standardPricingModalContent');
+            modal.classList.remove('hidden');
+            body.classList.add('overflow-hidden');
+            setTimeout(() => { content.classList.remove('opacity-0'); content.classList.add('opacity-100'); }, 10);
+        }
+        function closeStandardPricing() {
+            const modal = document.getElementById('standardPricingModal');
+            const content = document.getElementById('standardPricingModalContent');
+            content.classList.remove('opacity-100'); content.classList.add('opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); body.classList.remove('overflow-hidden'); }, 300);
         }
 
-        const toggle = document.getElementById('currency-toggle');
-        const setupPrices = document.querySelectorAll('.price-setup');
-        const monthlyPrices = document.querySelectorAll('.price-monthly');
-        const symbols = document.querySelectorAll('.currency-symbol');
-        const priceContainers = document.querySelectorAll('.price-transition');
+        // MODAL PERSONALIZADO
+        function openPersonalizedPricing() {
+            const modal = document.getElementById('personalizedPricingModal');
+            const content = document.getElementById('personalizedPricingModalContent');
+            modal.classList.remove('hidden');
+            body.classList.add('overflow-hidden');
+            setTimeout(() => { content.classList.remove('opacity-0'); content.classList.add('opacity-100'); }, 10);
+        }
+        function closePersonalizedPricing() {
+            const modal = document.getElementById('personalizedPricingModal');
+            const content = document.getElementById('personalizedPricingModalContent');
+            content.classList.remove('opacity-100'); content.classList.add('opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); body.classList.remove('overflow-hidden'); }, 300);
+        }
 
-        if(toggle) {
+        // CAMBIO MONEDA (Sincronizado para ambos modales)
+        function setupCurrencyToggle(toggleId, scopeId) {
+            const toggle = document.getElementById(toggleId);
+            const container = document.getElementById(scopeId);
             toggle.addEventListener('change', function() {
                 const isSoles = this.checked;
-                priceContainers.forEach(el => el.classList.add('fade-out'));
+                const prices = container.querySelectorAll('.price-transition');
+                prices.forEach(p => p.classList.add('fade-out'));
                 setTimeout(() => {
-                    symbols.forEach(sym => sym.textContent = isSoles ? 'S/' : 'USD');
-                    setupPrices.forEach(price => price.textContent = isSoles ? price.dataset.pen : price.dataset.usd);
-                    monthlyPrices.forEach(price => {
-                        if(price.dataset.usd) price.textContent = isSoles ? price.dataset.pen : price.dataset.usd;
-                    });
-                    priceContainers.forEach(el => el.classList.remove('fade-out'));
+                    container.querySelectorAll('.currency-symbol').forEach(s => s.textContent = isSoles ? 'S/' : 'USD');
+                    container.querySelectorAll('.price-setup').forEach(p => p.textContent = isSoles ? p.dataset.pen : p.dataset.usd);
+                    container.querySelectorAll('.price-monthly').forEach(p => p.textContent = isSoles ? p.dataset.pen : p.dataset.usd);
+                    prices.forEach(p => p.classList.remove('fade-out'));
                 }, 300);
             });
         }
+        setupCurrencyToggle('standard-toggle', 'standardPricingModal');
+        setupCurrencyToggle('custom-toggle', 'personalizedPricingModal');
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape") closePricingModal();
-        });
+        document.addEventListener('keydown', (e) => { if (e.key === "Escape") { closeAccessModal(); closeStandardPricing(); closePersonalizedPricing(); } });
     </script>
 </body>
 </html>
